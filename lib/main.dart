@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:markulator/Screens/contributor_information_screen.dart';
 import 'package:markulator/Screens/module_information_screen.dart';
 import 'package:provider/provider.dart';

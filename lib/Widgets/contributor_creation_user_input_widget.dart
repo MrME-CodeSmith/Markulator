@@ -147,7 +147,7 @@ class _ContributorCreationUserInputWidgetState
                   style: ButtonStyle(
                     alignment: Alignment.center,
                     padding:
-                        MaterialStateProperty.all(const EdgeInsets.symmetric(
+                        WidgetStateProperty.all(const EdgeInsets.symmetric(
                       horizontal: 0,
                       vertical: 20,
                     )),

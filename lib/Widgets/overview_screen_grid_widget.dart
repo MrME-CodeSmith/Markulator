@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Model/module_model.dart';
 import '../Providers/module_provider.dart';
 import './module_widget.dart';
 import 'overview_screen_no_modules_available_widget.dart';

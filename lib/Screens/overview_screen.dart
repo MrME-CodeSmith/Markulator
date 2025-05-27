@@ -13,12 +13,12 @@ class OverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Provider.of<SystemInformationProvider>(context).initialize(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text("Markulator"),
       ),
-      body: Column(
-        children: const <Widget>[
+      body: const Column(
+        children: <Widget>[
           OverviewScreenModuleAverageWidget(),
           OverviewScreenGridWidget(),
         ],
