@@ -180,9 +180,7 @@ class _ModuleCreationUserInputWidgetState
               },
               child: widget.toEdit == null
                   ? const Text("Add")
-                  : (widget.toEdit!.contributors.isEmpty)
-                      ? const Text("Update")
-                      : const Text("Rename"),
+                  : const Text("Update"),
             ),
           ),
         ),
@@ -230,9 +228,7 @@ class ModuleCreationHeadingWidget extends StatelessWidget {
       alignment: Alignment.center,
       child: (toEdit == null)
           ? const PaddedListHeadingWidget(headingName: "Add module")
-          : ((toEdit!.contributors.isEmpty)
-              ? const PaddedListHeadingWidget(headingName: "Update module")
-              : const PaddedListHeadingWidget(headingName: "Rename module")),
+          : const PaddedListHeadingWidget(headingName: "Update module"),
     );
   }
 }

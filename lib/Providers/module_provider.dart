@@ -198,7 +198,12 @@ class ModuleProvider with ChangeNotifier {
     required double credits,
   }) {
     _modules[id]!.name = name;
-    _modules[id]!.mark = mark / 100;
+    // Only update the mark if the module has no contributors. When a module
+    // contains contributors its mark is calculated automatically based on its
+    // children, therefore it should remain untouched here.
+    if (_modules[id]!.contributors.isEmpty) {
+      _modules[id]!.mark = mark / 100;
+    }
     _modules[id]!.credits = credits;
     notifyListeners();
 
