@@ -168,6 +168,9 @@ class _ContributorCreationUserInputWidgetState
                             : 0,
                         autoWeight: checked.wrappedValue,
                       );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Contributor added')),
+                      );
                     } else {
                       moduleProvider.updateContributor(
                         key: widget.toEdit!.key,
@@ -183,6 +186,9 @@ class _ContributorCreationUserInputWidgetState
                             : 0,
                         autoWeight: checked.wrappedValue,
                         parent: widget.toEdit!.parent!,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Contributor updated')),
                       );
                     }
 
