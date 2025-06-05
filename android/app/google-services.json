@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "233193101517",
+    "project_id": "markulator-21131",
+    "storage_bucket": "markulator-21131.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233193101517:android:1f293848c8c29903d27184",
+        "android_client_info": {
+          "package_name": "com.tungstenbits.markulator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG4boUVN9LbFJA_ZQu-GAhM2gfGARaEm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

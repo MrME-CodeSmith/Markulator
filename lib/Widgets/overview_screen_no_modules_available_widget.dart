@@ -7,11 +7,23 @@ class OverviewScreenNoModulesAvailable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Expanded(
+    return Expanded(
       child: Center(
-        child: Text(
-          "No modules available\nTry adding some.",
-          style: TextStyle(fontSize: 18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(
+              Icons.info_outline,
+              size: 48,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 8),
+            Text(
+              "No modules available\nTry adding some.",
+              style: TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
