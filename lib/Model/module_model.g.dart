@@ -23,13 +23,14 @@ class MarkItemAdapter extends TypeAdapter<MarkItem> {
       weight: fields[5] as double,
       parent: fields[7] as MarkItem?,
       autoWeight: fields[6] as bool,
+      credits: (fields[8] as double?) ?? 1,
     );
   }
 
   @override
   void write(BinaryWriter writer, MarkItem obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(1)
       ..write(obj.id)
       ..writeByte(2)
@@ -43,7 +44,9 @@ class MarkItemAdapter extends TypeAdapter<MarkItem> {
       ..writeByte(6)
       ..write(obj.autoWeight)
       ..writeByte(7)
-      ..write(obj.parent);
+      ..write(obj.parent)
+      ..writeByte(8)
+      ..write(obj.credits);
   }
 
   @override

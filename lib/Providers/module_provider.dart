@@ -36,6 +36,22 @@ class ModuleProvider with ChangeNotifier {
     return total;
   }
 
+  double get weightedAverageModulesMark {
+    double weightedTotal = 0;
+    double creditsTotal = 0;
+
+    _modules.forEach((key, value) {
+      weightedTotal += value.mark * value.credits;
+      creditsTotal += value.credits;
+    });
+
+    if (creditsTotal > 0) {
+      return weightedTotal / creditsTotal;
+    }
+
+    return 0;
+  }
+
   double averageMark(int id) {
     MarkItem? m = _modules[id];
     return (m != null) ? m.mark : 0;
@@ -55,6 +71,7 @@ class ModuleProvider with ChangeNotifier {
       contributors: HiveList(_storedModules),
       parent: parent,
       autoWeight: autoWeight,
+      credits: 0,
     );
 
     _storedModules.add(toAdd);
@@ -133,6 +150,7 @@ class ModuleProvider with ChangeNotifier {
     required String name,
     required double mark,
     required HiveList? contributors,
+    required double credits,
   }) {
     MarkItem m = MarkItem(
       name: name,
@@ -142,6 +160,7 @@ class ModuleProvider with ChangeNotifier {
       autoWeight: true,
       parent: null,
       weight: 0,
+      credits: credits,
     );
 
     _storedModules.add(m);
@@ -176,9 +195,11 @@ class ModuleProvider with ChangeNotifier {
     required int id,
     required String name,
     required double mark,
+    required double credits,
   }) {
     _modules[id]!.name = name;
     _modules[id]!.mark = mark / 100;
+    _modules[id]!.credits = credits;
     notifyListeners();
 
     _modules[id]!.save();
