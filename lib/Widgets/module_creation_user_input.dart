@@ -24,6 +24,7 @@ class _ModuleCreationUserInputWidgetState
     extends State<ModuleCreationUserInputWidget> {
   late final TextEditingController _nameController;
   late final TextEditingController _percentageController;
+  late final TextEditingController _creditsController;
 
   late ModuleProvider moduleProvider;
 
@@ -38,6 +39,11 @@ class _ModuleCreationUserInputWidgetState
         text: (widget.toEdit == null)
             ? ""
             : (widget.toEdit!.mark * 100).toStringAsFixed(2));
+
+    _creditsController = TextEditingController(
+        text: (widget.toEdit == null)
+            ? ""
+            : widget.toEdit!.credits.toString());
   }
 
   @override
@@ -81,6 +87,19 @@ class _ModuleCreationUserInputWidgetState
               border: UnderlineInputBorder(),
               labelText: 'Module name',
               hintText: 'e.g. Calculus',
+              contentPadding: EdgeInsets.only(left: 7),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 7, 30, 0),
+          child: TextField(
+            key: const Key("MC"),
+            controller: _creditsController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Credits',
               contentPadding: EdgeInsets.only(left: 7),
             ),
           ),
@@ -134,6 +153,9 @@ class _ModuleCreationUserInputWidgetState
                         ? double.parse(_percentageController.text)
                         : 0,
                     contributors: null,
+                    credits: (double.tryParse(_creditsController.text) != null)
+                        ? double.parse(_creditsController.text)
+                        : 0,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Module added')),
@@ -145,6 +167,9 @@ class _ModuleCreationUserInputWidgetState
                     mark: (double.tryParse(_percentageController.text) != null)
                         ? double.parse(_percentageController.text)
                         : 0,
+                    credits: (double.tryParse(_creditsController.text) != null)
+                        ? double.parse(_creditsController.text)
+                        : widget.toEdit!.credits,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Module updated')),
