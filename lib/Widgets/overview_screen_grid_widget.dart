@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import '../Providers/module_provider.dart';
 import './module_widget.dart';
@@ -22,7 +23,7 @@ class OverviewScreenGridWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.45,
-                  child: GridView.builder(
+                  child: ReorderableGridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -31,6 +32,7 @@ class OverviewScreenGridWidget extends StatelessWidget {
                       mainAxisSpacing: 20,
                     ),
                     itemBuilder: (_, i) => Container(
+                      key: ValueKey(moduleProvider.modules.keys.elementAt(i)),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -48,6 +50,9 @@ class OverviewScreenGridWidget extends StatelessWidget {
                     ),
                     itemCount: moduleProvider.modules.entries.length,
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    onReorder: (oldIndex, newIndex) {
+                      moduleProvider.reorderModules(oldIndex, newIndex);
+                    },
                   ),
                 ),
               ),
