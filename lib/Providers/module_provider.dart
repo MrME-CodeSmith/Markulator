@@ -190,4 +190,14 @@ class ModuleProvider with ChangeNotifier {
       setAppropriateParent(element);
     });
   }
+
+  void reorderModules(int oldIndex, int newIndex) {
+    final entries = _modules.entries.toList();
+    final entry = entries.removeAt(oldIndex);
+    entries.insert(newIndex, entry);
+    _modules
+      ..clear()
+      ..addEntries(entries);
+    notifyListeners();
+  }
 }
