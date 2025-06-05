@@ -5,10 +5,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../Model/module_model.dart';
 import '../main.dart';
+import 'cloud_provider.dart';
 
 class ModuleProvider with ChangeNotifier {
   late final dynamic _storedModules;
   late final Map<dynamic, dynamic> _modules;
+  CloudProvider? _cloudProvider;
 
   ModuleProvider() {
     _storedModules = Hive.box(userModulesBox);
@@ -34,6 +36,31 @@ class ModuleProvider with ChangeNotifier {
     }
 
     return total;
+  }
+
+  Future<void> setCloudProvider(CloudProvider provider) async {
+    _cloudProvider = provider;
+    final data = await provider.fetchModulesIfNewer();
+    if (data != null) {
+      await _loadFromRemote(data);
+      notifyListeners();
+    }
+  }
+
+  void _sync() {
+    if (_cloudProvider != null) {
+      _cloudProvider!.syncModules(
+          _modules.values.map((e) => (e as MarkItem).toMap()).toList());
+    }
+  }
+
+  Future<void> _loadFromRemote(List<Map<String, dynamic>> data) async {
+    _modules.clear();
+    await _storedModules.clear();
+    for (final map in data) {
+      final item = MarkItem.fromMap(map, _storedModules);
+      _modules[item.key] = item;
+    }
   }
 
   double get weightedAverageModulesMark {
@@ -85,6 +112,7 @@ class ModuleProvider with ChangeNotifier {
     notifyListeners();
 
     parent.save();
+    _sync();
   }
 
   void updateContributor({
@@ -107,6 +135,7 @@ class ModuleProvider with ChangeNotifier {
     notifyListeners();
 
     parent.contributors[index].save();
+    _sync();
   }
 
   void calculateWeights(MarkItem parent) {
@@ -170,6 +199,7 @@ class ModuleProvider with ChangeNotifier {
     _modules.putIfAbsent(m.key, () => m);
 
     notifyListeners();
+    _sync();
   }
 
   void removeContributor({
@@ -181,6 +211,7 @@ class ModuleProvider with ChangeNotifier {
     calculateWeights(parent);
 
     notifyListeners();
+    _sync();
   }
 
   void removeModule({required int key}) {
@@ -189,6 +220,7 @@ class ModuleProvider with ChangeNotifier {
     notifyListeners();
 
     _storedModules.delete(key);
+    _sync();
   }
 
   void updateModule({
@@ -208,6 +240,7 @@ class ModuleProvider with ChangeNotifier {
     notifyListeners();
 
     _modules[id]!.save();
+    _sync();
   }
 
   void setAppropriateParent(MarkItem parent) {
@@ -225,10 +258,13 @@ class ModuleProvider with ChangeNotifier {
       ..clear()
       ..addEntries(entries);
     notifyListeners();
+    _sync();
   }
 
   void reorderContributors(
-      {required MarkItem parent, required int oldIndex, required int newIndex}) {
+      {required MarkItem parent,
+      required int oldIndex,
+      required int newIndex}) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -236,5 +272,6 @@ class ModuleProvider with ChangeNotifier {
     parent.contributors.insert(newIndex, item);
     parent.save();
     notifyListeners();
+    _sync();
   }
 }

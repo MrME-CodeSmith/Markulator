@@ -39,4 +39,36 @@ class MarkItem extends HiveObject {
     required this.autoWeight,
     required this.credits,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'mark': mark,
+      'weight': weight,
+      'autoWeight': autoWeight,
+      'credits': credits,
+      'contributors': contributors.map((c) => (c as MarkItem).toMap()).toList(),
+    };
+  }
+
+  static MarkItem fromMap(Map<String, dynamic> map, Box box,
+      [MarkItem? parent]) {
+    final item = MarkItem(
+      name: map['name'] as String,
+      mark: (map['mark'] as num).toDouble(),
+      contributors: HiveList(box),
+      weight: (map['weight'] as num).toDouble(),
+      parent: parent,
+      autoWeight: map['autoWeight'] as bool,
+      credits: (map['credits'] as num).toDouble(),
+    );
+    box.add(item);
+    if (map['contributors'] != null) {
+      for (final c in (map['contributors'] as List)) {
+        item.contributors.add(fromMap(Map<String, dynamic>.from(c), box, item));
+      }
+    }
+    item.save();
+    return item;
+  }
 }

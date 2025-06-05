@@ -5,6 +5,7 @@ import '../Providers/system_information_provider.dart';
 import '../Widgets/module_creation_user_input.dart';
 import '../Widgets/overview_screen_grid_widget.dart';
 import '../Widgets/overview_screen_average_carousel_widget.dart';
+import 'settings_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
   const OverviewScreen({super.key});
@@ -16,6 +17,14 @@ class OverviewScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text("Markulator"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).pushNamed(SettingsScreen.routeName);
+            },
+          ),
+        ],
       ),
       body: const Column(
         children: <Widget>[

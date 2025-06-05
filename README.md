@@ -18,3 +18,5 @@ samples, guidance on mobile development, and a full API reference.
 ## Features
 - Track credits for each module
 - Weighted average calculation with credits displayed in a carousel on the overview screen
+- Optional Google sign-in to sync modules with Firestore
+- Automatically pulls newer module data from Firestore when available
