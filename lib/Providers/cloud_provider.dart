@@ -25,20 +25,29 @@ class CloudProvider with ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return; // user canceled
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    await _auth.signInWithCredential(credential);
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return; // user canceled
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await _auth.signInWithCredential(credential);
+    } catch (e) {
+      debugPrint('Google sign-in failed: $e');
+    }
     notifyListeners();
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    try {
+      await GoogleSignIn().signOut();
+      await _auth.signOut();
+    } catch (e) {
+      debugPrint('Sign out failed: $e');
+    }
     notifyListeners();
   }
 
@@ -64,7 +73,8 @@ class CloudProvider with ChangeNotifier {
     if (!doc.exists) return null;
     final data = doc.data()!;
     final remoteTs = (data['lastUpdated'] as Timestamp?)?.toDate();
-    if (remoteTs != null && (lastUpdated == null || remoteTs.isAfter(lastUpdated!))) {
+    if (remoteTs != null &&
+        (lastUpdated == null || remoteTs.isAfter(lastUpdated!))) {
       _updateLastUpdated(remoteTs);
       return List<Map<String, dynamic>>.from(data['modules'] as List);
     }
