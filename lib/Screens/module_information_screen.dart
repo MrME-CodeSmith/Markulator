@@ -50,8 +50,8 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
                 isScrollControlled: true,
                 context: context,
                 shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.zero, top: Radius.circular(14)),
+                  borderRadius: BorderRadius.vertical(
+                      bottom: Radius.zero, top: Radius.circular(14)),
                 ),
                 builder: (ctx) => ModuleCreationUserInputWidget(
                   toEdit: moduleProvider.modules[moduleName]!,

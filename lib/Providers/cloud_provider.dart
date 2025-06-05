@@ -64,7 +64,8 @@ class CloudProvider with ChangeNotifier {
     if (!doc.exists) return null;
     final data = doc.data()!;
     final remoteTs = (data['lastUpdated'] as Timestamp?)?.toDate();
-    if (remoteTs != null && (lastUpdated == null || remoteTs.isAfter(lastUpdated!))) {
+    if (remoteTs != null &&
+        (lastUpdated == null || remoteTs.isAfter(lastUpdated!))) {
       _updateLastUpdated(remoteTs);
       return List<Map<String, dynamic>>.from(data['modules'] as List);
     }

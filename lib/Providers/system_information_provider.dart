@@ -7,7 +7,7 @@ class SystemInformationProvider with ChangeNotifier {
 
   SystemInformationProvider();
 
-  initialize(BuildContext context) {
+  void initialize(BuildContext context) {
     systemInformation = SystemInformation(
       screenHeight: MediaQuery.of(context).size.height,
       screenWidth: MediaQuery.of(context).size.width,

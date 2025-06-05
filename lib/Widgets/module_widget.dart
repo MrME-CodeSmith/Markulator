@@ -51,19 +51,18 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                   const Icon(Icons.edit_rounded),
                 ],
               ),
-              onTap: () {
-                Future.delayed(
-                  const Duration(seconds: 0),
-                  () => showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                          bottom: Radius.zero, top: Radius.circular(14)),
-                    ),
-                    builder: (ctx) => ModuleCreationUserInputWidget(
-                      toEdit: moduleProvider.modules[widget.id],
-                    ),
+              onTap: () async {
+                await Future.delayed(const Duration(seconds: 0));
+                if (!context.mounted) return;
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                        bottom: Radius.zero, top: Radius.circular(14)),
+                  ),
+                  builder: (ctx) => ModuleCreationUserInputWidget(
+                    toEdit: moduleProvider.modules[widget.id],
                   ),
                 );
               },
@@ -77,11 +76,10 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                       color: Theme.of(context).colorScheme.error),
                 ],
               ),
-              onTap: () {
-                Future.delayed(
-                  const Duration(seconds: 0),
-                  () => confirmDeletion(context, moduleProvider),
-                );
+              onTap: () async {
+                await Future.delayed(const Duration(seconds: 0));
+                if (!context.mounted) return;
+                confirmDeletion(context, moduleProvider);
               },
             ),
           ],

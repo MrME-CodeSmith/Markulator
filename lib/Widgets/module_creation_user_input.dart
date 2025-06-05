@@ -41,9 +41,7 @@ class _ModuleCreationUserInputWidgetState
             : (widget.toEdit!.mark * 100).toStringAsFixed(2));
 
     _creditsController = TextEditingController(
-        text: (widget.toEdit == null)
-            ? ""
-            : widget.toEdit!.credits.toString());
+        text: (widget.toEdit == null) ? "" : widget.toEdit!.credits.toString());
   }
 
   @override

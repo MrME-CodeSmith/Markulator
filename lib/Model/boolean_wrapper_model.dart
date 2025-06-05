@@ -3,7 +3,7 @@ class Boolean {
 
   Boolean({required this.value});
 
-  operator &(Boolean v) {
+  void operator &(Boolean v) {
     v.value = !v.value;
   }
 

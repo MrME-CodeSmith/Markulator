@@ -146,8 +146,7 @@ class _ContributorCreationUserInputWidgetState
                 child: ElevatedButton(
                   style: ButtonStyle(
                     alignment: Alignment.center,
-                    padding:
-                        WidgetStateProperty.all(const EdgeInsets.symmetric(
+                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
                       horizontal: 0,
                       vertical: 20,
                     )),
