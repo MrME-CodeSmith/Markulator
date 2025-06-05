@@ -221,4 +221,15 @@ class ModuleProvider with ChangeNotifier {
       ..addEntries(entries);
     notifyListeners();
   }
+
+  void reorderContributors(
+      {required MarkItem parent, required int oldIndex, required int newIndex}) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = parent.contributors.removeAt(oldIndex) as MarkItem;
+    parent.contributors.insert(newIndex, item);
+    parent.save();
+    notifyListeners();
+  }
 }

@@ -8,6 +8,7 @@ import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
 import '../Widgets/padded_list_heading_widget.dart';
+import '../Widgets/contributor_creation_user_input_widget.dart';
 
 class ContributorInformationScreen extends StatefulWidget {
   static const routeName = "/ContributorInformation";
@@ -41,6 +42,25 @@ class _ContributorInformationScreenState
       appBar: AppBar(
         title: Text(parent.name),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_rounded),
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.zero, top: Radius.circular(14)),
+                ),
+                builder: (ctx) => ContributorCreationUserInputWidget(
+                  screenHeight: 0,
+                  screenWidth: MediaQuery.of(ctx).size.width,
+                  parent: null,
+                  toEdit: parent,
+                ),
+              );
+            },
+          ),
           AddContributorPopUpModal(
             parent: parent,
             toEdit: null,
@@ -63,10 +83,18 @@ class _ContributorInformationScreenState
             const PaddedListHeadingWidget(headingName: "Contributors"),
           if (parent.contributors.isNotEmpty)
             Expanded(
-              child: ListView.builder(
+              child: ReorderableListView.builder(
+                onReorder: (oldIndex, newIndex) {
+                  moduleProvider.reorderContributors(
+                    parent: parent,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                  );
+                },
                 itemCount: parent.contributors.length,
                 itemBuilder: (ctx, index) {
                   return Padding(
+                    key: ValueKey(parent.contributors[index].key),
                     padding: (index < (parent.contributors.length - 1))
                         ? const EdgeInsets.only(bottom: 12)
                         : const EdgeInsets.all(0),

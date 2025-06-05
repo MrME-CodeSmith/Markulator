@@ -8,6 +8,7 @@ import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
 import '../Widgets/padded_list_heading_widget.dart';
+import '../Widgets/module_creation_user_input.dart';
 
 class ModuleInformationScreen extends StatefulWidget {
   static const routeName = "/moduleInformation";
@@ -42,6 +43,22 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
       appBar: AppBar(
         title: Text(moduleProvider.modules[moduleName]!.name),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_rounded),
+            onPressed: () {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.zero, top: Radius.circular(14)),
+                ),
+                builder: (ctx) => ModuleCreationUserInputWidget(
+                  toEdit: moduleProvider.modules[moduleName]!,
+                ),
+              );
+            },
+          ),
           AddContributorPopUpModal(
             parent: moduleProvider.modules[moduleName]!,
             toEdit: null,
@@ -62,11 +79,20 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
             const PaddedListHeadingWidget(headingName: "Contributors"),
           if (moduleProvider.modules[moduleName]!.contributors.isNotEmpty)
             Expanded(
-              child: ListView.builder(
+              child: ReorderableListView.builder(
+                onReorder: (oldIndex, newIndex) {
+                  moduleProvider.reorderContributors(
+                    parent: moduleProvider.modules[moduleName]!,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                  );
+                },
                 itemCount:
-                    moduleProvider.modules[moduleName]?.contributors.length,
+                    moduleProvider.modules[moduleName]!.contributors.length,
                 itemBuilder: (ctx, index) {
                   return Padding(
+                    key: ValueKey(moduleProvider
+                        .modules[moduleName]!.contributors[index].key),
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: ContributorWidget(
                         contributor: (moduleProvider.modules[moduleName]!
