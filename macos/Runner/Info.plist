@@ -28,5 +28,19 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<!-- BEGIN: Google Sign-In URL scheme -->
+	<dict>
+		<key>CFBundleURLName</key>
+		<string>com.googleusercontent.apps.233193101517-q0048ggfttbq6sfnrngr4u8f802ec8ca</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<!-- The reversed client ID from your GoogleService-Info.plist -->
+		<string>com.googleusercontent.apps.233193101517-q0048ggfttbq6sfnrngr4u8f802ec8ca</string>
+		</array>
+	</dict>
+	<!-- END: Google Sign-In URL scheme -->
+	</array>
 </dict>
 </plist>

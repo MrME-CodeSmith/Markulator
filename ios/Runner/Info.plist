@@ -47,5 +47,19 @@
 	<false/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<!-- BEGIN: Google Sign-In URL scheme -->
+	<dict>
+		<key>CFBundleURLName</key>
+		<string>com.googleusercontent.apps.233193101517-uf8nd9bd3vfl5i7400ado3b9haihbu6b</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<!-- The reversed client ID from your GoogleService-Info.plist -->
+		<string>com.googleusercontent.apps.233193101517-uf8nd9bd3vfl5i7400ado3b9haihbu6b</string>
+		</array>
+	</dict>
+	<!-- END: Google Sign-In URL scheme -->
+	</array>
 </dict>
 </plist>

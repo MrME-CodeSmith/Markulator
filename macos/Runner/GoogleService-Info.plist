@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>233193101517-uf8nd9bd3vfl5i7400ado3b9haihbu6b.apps.googleusercontent.com</string>
+	<string>233193101517-q0048ggfttbq6sfnrngr4u8f802ec8ca.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.233193101517-uf8nd9bd3vfl5i7400ado3b9haihbu6b</string>
+	<string>com.googleusercontent.apps.233193101517-q0048ggfttbq6sfnrngr4u8f802ec8ca</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBRFYNDrCaG2kkoPDEKwPtT4CCVBUcLsMw</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.beta.markulator</string>
+	<string>com.example.markulator</string>
 	<key>PROJECT_ID</key>
 	<string>markulator-21131</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:233193101517:ios:d57f4bbd630aecd4d27184</string>
+	<string>1:233193101517:ios:788f663e50d1d3dcd27184</string>
 </dict>
 </plist>

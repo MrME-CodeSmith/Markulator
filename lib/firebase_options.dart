@@ -2,7 +2,7 @@
 // ignore_for_file: type=lint
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform, kDebugMode;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -28,11 +28,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-      if(kDebugMode) return ios; // Use iOS options for macOS in debug mode
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -65,5 +61,14 @@ class DefaultFirebaseOptions {
     projectId: 'markulator-21131',
     storageBucket: 'markulator-21131.firebasestorage.app',
     iosBundleId: 'com.beta.markulator',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBRFYNDrCaG2kkoPDEKwPtT4CCVBUcLsMw',
+    appId: '1:233193101517:ios:788f663e50d1d3dcd27184',
+    messagingSenderId: '233193101517',
+    projectId: 'markulator-21131',
+    storageBucket: 'markulator-21131.firebasestorage.app',
+    iosBundleId: 'com.example.markulator',
   );
 }
