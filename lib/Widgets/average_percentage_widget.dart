@@ -4,10 +4,10 @@ import 'percentage_indicator_widget.dart';
 
 class AveragePercentageWidget extends StatelessWidget {
   const AveragePercentageWidget({
-    Key? key,
+    super.key,
     required this.percentage,
     required this.heading,
-  }) : super(key: key);
+  });
 
   final double percentage;
   final String heading;

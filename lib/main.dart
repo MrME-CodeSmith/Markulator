@@ -30,7 +30,7 @@ void main() async {
 }
 
 class Markulator extends StatelessWidget {
-  const Markulator({Key? key, required this.moduleProvider}) : super(key: key);
+  const Markulator({super.key, required this.moduleProvider});
 
   final ModuleProvider moduleProvider;
 

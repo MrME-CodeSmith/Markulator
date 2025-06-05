@@ -11,7 +11,7 @@ import '../Widgets/padded_list_heading_widget.dart';
 
 class ModuleInformationScreen extends StatefulWidget {
   static const routeName = "/moduleInformation";
-  const ModuleInformationScreen({Key? key}) : super(key: key);
+  const ModuleInformationScreen({super.key});
 
   @override
   State<ModuleInformationScreen> createState() =>

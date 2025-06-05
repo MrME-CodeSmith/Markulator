@@ -6,8 +6,8 @@ import './average_percentage_widget.dart';
 
 class OverviewScreenModuleAverageWidget extends StatelessWidget {
   const OverviewScreenModuleAverageWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

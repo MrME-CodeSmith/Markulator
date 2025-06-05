@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class PaddedListHeadingWidget extends StatelessWidget {
   const PaddedListHeadingWidget({
-    Key? key,
+    super.key,
     required this.headingName,
-  }) : super(key: key);
+  });
 
   final String headingName;
 

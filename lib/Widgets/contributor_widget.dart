@@ -11,9 +11,9 @@ import 'contributor_creation_user_input_widget.dart';
 
 class ContributorWidget extends StatefulWidget {
   const ContributorWidget({
-    Key? key,
+    super.key,
     required this.contributor,
-  }) : super(key: key);
+  });
 
   final MarkItem contributor;
 

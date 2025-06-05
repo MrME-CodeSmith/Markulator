@@ -11,7 +11,7 @@ import '../Widgets/padded_list_heading_widget.dart';
 
 class ContributorInformationScreen extends StatefulWidget {
   static const routeName = "/ContributorInformation";
-  const ContributorInformationScreen({Key? key}) : super(key: key);
+  const ContributorInformationScreen({super.key});
 
   @override
   State<ContributorInformationScreen> createState() =>

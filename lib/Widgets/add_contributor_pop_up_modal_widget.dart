@@ -5,10 +5,10 @@ import 'contributor_creation_user_input_widget.dart';
 
 class AddContributorPopUpModal extends StatefulWidget {
   const AddContributorPopUpModal({
-    Key? key,
+    super.key,
     required this.parent,
     required this.toEdit,
-  }) : super(key: key);
+  });
 
   final MarkItem? parent;
   final MarkItem? toEdit;

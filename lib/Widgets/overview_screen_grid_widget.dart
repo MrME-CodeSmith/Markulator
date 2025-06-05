@@ -9,8 +9,8 @@ import 'padded_list_heading_widget.dart';
 
 class OverviewScreenGridWidget extends StatelessWidget {
   const OverviewScreenGridWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

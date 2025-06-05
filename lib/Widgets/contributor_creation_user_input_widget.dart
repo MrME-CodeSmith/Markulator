@@ -11,12 +11,12 @@ import 'percentage_input_widget.dart';
 
 class ContributorCreationUserInputWidget extends StatefulWidget {
   const ContributorCreationUserInputWidget({
-    Key? key,
+    super.key,
     required this.screenHeight,
     required this.screenWidth,
     required this.parent,
     required this.toEdit,
-  }) : super(key: key);
+  });
 
   final double screenHeight;
   final double screenWidth;

@@ -3,11 +3,10 @@ import 'package:flutter/services.dart';
 
 class PercentageInputWidget extends StatelessWidget {
   const PercentageInputWidget(
-      {Key? key,
+      {super.key,
       required this.label,
       required this.readOnly,
-      required this.percentageController})
-      : super(key: key);
+      required this.percentageController});
 
   final bool readOnly;
   final String label;

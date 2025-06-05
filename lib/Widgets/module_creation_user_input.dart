@@ -9,9 +9,9 @@ import './percentage_input_widget.dart';
 
 class ModuleCreationUserInputWidget extends StatefulWidget {
   const ModuleCreationUserInputWidget({
-    Key? key,
+    super.key,
     required this.toEdit,
-  }) : super(key: key);
+  });
 
   final MarkItem? toEdit;
 
@@ -186,9 +186,9 @@ class _ModuleCreationUserInputWidgetState
 
 class ModuleCreationHeadingWidget extends StatelessWidget {
   const ModuleCreationHeadingWidget({
-    Key? key,
+    super.key,
     required this.toEdit,
-  }) : super(key: key);
+  });
 
   final MarkItem? toEdit;
 

@@ -5,10 +5,10 @@ import './percentage_input_widget.dart';
 
 class WeightPercentageInputWidget extends StatefulWidget {
   const WeightPercentageInputWidget({
-    Key? key,
+    super.key,
     required this.percentageController,
     required this.val,
-  }) : super(key: key);
+  });
 
   final Boolean val;
   final TextEditingController percentageController;

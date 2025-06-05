@@ -7,7 +7,7 @@ import '../Widgets/overview_screen_grid_widget.dart';
 import '../Widgets/overview_screen_module_average_widget.dart';
 
 class OverviewScreen extends StatelessWidget {
-  const OverviewScreen({Key? key}) : super(key: key);
+  const OverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'percentage_indicator_widget.dart';
 class ModuleWidget extends StatefulWidget {
   final int id;
 
-  const ModuleWidget({Key? key, required this.id}) : super(key: key);
+  const ModuleWidget({super.key, required this.id});
 
   @override
   State<ModuleWidget> createState() => _ModuleWidgetState();
