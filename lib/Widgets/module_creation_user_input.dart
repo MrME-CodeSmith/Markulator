@@ -80,6 +80,7 @@ class _ModuleCreationUserInputWidgetState
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               labelText: 'Module name',
+              hintText: 'e.g. Calculus',
               contentPadding: EdgeInsets.only(left: 7),
             ),
           ),
@@ -134,6 +135,9 @@ class _ModuleCreationUserInputWidgetState
                         : 0,
                     contributors: null,
                   );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Module added')),
+                  );
                 } else {
                   moduleProvider.updateModule(
                     id: widget.toEdit!.key,
@@ -141,6 +145,9 @@ class _ModuleCreationUserInputWidgetState
                     mark: (double.tryParse(_percentageController.text) != null)
                         ? double.parse(_percentageController.text)
                         : 0,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Module updated')),
                   );
                 }
 

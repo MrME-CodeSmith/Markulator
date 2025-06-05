@@ -23,7 +23,7 @@ class OverviewScreen extends StatelessWidget {
           OverviewScreenGridWidget(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(
             isScrollControlled: true,
@@ -37,7 +37,8 @@ class OverviewScreen extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Module'),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,
