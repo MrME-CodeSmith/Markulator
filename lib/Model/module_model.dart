@@ -27,6 +27,9 @@ class MarkItem extends HiveObject {
   @HiveField(7)
   MarkItem? parent;
 
+  @HiveField(8)
+  double credits;
+
   MarkItem({
     required this.name,
     required this.mark,
@@ -34,5 +37,6 @@ class MarkItem extends HiveObject {
     required this.weight,
     required this.parent,
     required this.autoWeight,
+    required this.credits,
   });
 }
