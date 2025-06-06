@@ -63,6 +63,40 @@ class ModuleProvider with ChangeNotifier {
     }
   }
 
+  /// Clears all locally stored modules.
+  Future<void> clearLocalModules() async {
+    _modules.clear();
+    await _storedModules.clear();
+    notifyListeners();
+  }
+
+  /// Forces uploading the current local modules to the cloud.
+  Future<void> forceUploadToCloud() async {
+    if (_cloudProvider != null) {
+      await _cloudProvider!.syncModules(
+          _modules.values.map((e) => (e as MarkItem).toMap()).toList());
+    }
+  }
+
+  /// Forces fetching modules from the cloud and overwriting local data.
+  Future<void> forceLoadFromCloud() async {
+    if (_cloudProvider != null) {
+      final data = await _cloudProvider!.fetchAllModules();
+      if (data != null) {
+        await _loadFromRemote(data);
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Returns the current local modules as a list of plain maps. Useful for
+  /// debugging and verifying sync operations.
+  List<Map<String, dynamic>> exportLocalModules() {
+    return _modules.values
+        .map((e) => (e as MarkItem).toMap())
+        .toList(growable: false);
+  }
+
   double get weightedAverageModulesMark {
     double weightedTotal = 0;
     double creditsTotal = 0;
