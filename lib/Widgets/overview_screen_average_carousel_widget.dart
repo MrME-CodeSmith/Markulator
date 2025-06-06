@@ -5,7 +5,8 @@ import '../Providers/module_provider.dart';
 import './average_percentage_widget.dart';
 
 class OverviewScreenAverageCarouselWidget extends StatefulWidget {
-  const OverviewScreenAverageCarouselWidget({super.key});
+  final double height;
+  const OverviewScreenAverageCarouselWidget({super.key, required this.height});
 
   @override
   State<OverviewScreenAverageCarouselWidget> createState() =>
@@ -34,7 +35,7 @@ class _OverviewScreenAverageCarouselWidgetState
     final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
     return SizedBox(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: widget.height,
       child: Column(
         children: [
           Expanded(
@@ -73,7 +74,7 @@ class _OverviewScreenAverageCarouselWidgetState
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
