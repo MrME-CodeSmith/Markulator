@@ -44,7 +44,10 @@ class OverviewScreen extends StatelessWidget {
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: const Text('Markulator'),
+          middle: Text(
+            'Markulator',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           trailing: CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: () {
@@ -79,7 +82,10 @@ class OverviewScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Markulator'),
+        title: Text(
+          'Markulator',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -105,7 +111,10 @@ class OverviewScreen extends StatelessWidget {
           );
         },
         icon: const Icon(Icons.add),
-        label: const Text('Add Module'),
+        label: Text(
+          'Add Module',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,

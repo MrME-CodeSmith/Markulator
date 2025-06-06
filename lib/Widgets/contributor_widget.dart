@@ -10,10 +10,7 @@ import './percentage_indicator_widget.dart';
 import 'contributor_creation_user_input_widget.dart';
 
 class ContributorWidget extends StatefulWidget {
-  const ContributorWidget({
-    super.key,
-    required this.contributor,
-  });
+  const ContributorWidget({super.key, required this.contributor});
 
   final MarkItem contributor;
 
@@ -32,7 +29,8 @@ class _ContributorWidgetState extends State<ContributorWidget> {
     provider = Provider.of<ModuleProvider>(context, listen: false);
     systemInformationProvider = Provider.of<SystemInformationProvider>(context);
     screenHeight = systemInformationProvider.androidAvailableScreenHeight(
-        context: context);
+      context: context,
+    );
     super.didChangeDependencies();
   }
 
@@ -45,45 +43,46 @@ class _ContributorWidgetState extends State<ContributorWidget> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                  color: Colors.blueGrey[300]!,
-                  blurRadius: 2.5,
-                  offset: const Offset(5.0, 7.0)),
+                color: Colors.blueGrey[300]!,
+                blurRadius: 2.5,
+                offset: const Offset(5.0, 7.0),
+              ),
             ],
             borderRadius: BorderRadius.circular(10),
           ),
           child: Card(
             elevation: 1,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Slidable(
               key: ValueKey(widget.contributor),
               endActionPane: ActionPane(
                 extentRatio: 0.5,
-                motion: DrawerMotion(
-                  key: widget.key,
-                ),
+                motion: DrawerMotion(key: widget.key),
                 children: [
                   SlidableAction(
                     onPressed: (_) {
                       showModalBottomSheet(
-                          isScrollControlled: true,
-                          isDismissible: true,
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
+                        isScrollControlled: true,
+                        isDismissible: true,
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
                             bottom: Radius.zero,
                             top: Radius.circular(14),
-                          )),
-                          builder: (ctx) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 30),
-                                child: ContributorCreationUserInputWidget(
-                                  screenHeight: 0,
-                                  screenWidth: MediaQuery.of(ctx).size.width,
-                                  parent: null,
-                                  toEdit: widget.contributor,
-                                ),
-                              ));
+                          ),
+                        ),
+                        builder: (ctx) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ContributorCreationUserInputWidget(
+                            screenHeight: 0,
+                            screenWidth: MediaQuery.of(ctx).size.width,
+                            parent: null,
+                            toEdit: widget.contributor,
+                          ),
+                        ),
+                      );
                     },
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -95,20 +94,31 @@ class _ContributorWidgetState extends State<ContributorWidget> {
                       showDialog(
                         context: context,
                         builder: (ctx) => AlertDialog(
-                          title: const Text("Are you sure?"),
-                          content: const Text(
-                              "Do you want to remove this iem with all its sub-contents?"),
+                          title: Text(
+                            "Are you sure?",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          content: Text(
+                            "Do you want to remove this iem with all its sub-contents?",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                           actions: [
                             TextButton.icon(
                               icon: const Icon(Icons.cancel_rounded),
-                              label: const Text("No"),
+                              label: Text(
+                                "No",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                               onPressed: () {
                                 Navigator.of(ctx).pop(false);
                               },
                             ),
                             TextButton.icon(
                               icon: const Icon(Icons.check_rounded),
-                              label: const Text("Yes"),
+                              label: Text(
+                                "Yes",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                               onPressed: () {
                                 shouldDelete = true;
                                 Navigator.of(ctx).pop(false);
@@ -144,12 +154,14 @@ class _ContributorWidgetState extends State<ContributorWidget> {
                       ? FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              "${(widget.contributor.mark * 100).toStringAsFixed(0)}%"),
+                            "${(widget.contributor.mark * 100).toStringAsFixed(0)}%",
+                          ),
                         )
                       : FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              "${(widget.contributor.mark * 100).toStringAsFixed(2)}%"),
+                            "${(widget.contributor.mark * 100).toStringAsFixed(2)}%",
+                          ),
                         ),
                 ),
                 title: Text(
@@ -163,7 +175,8 @@ class _ContributorWidgetState extends State<ContributorWidget> {
                     if (widget.contributor.contributors.isNotEmpty)
                       (widget.contributor.contributors.length > 1)
                           ? Text(
-                              "${widget.contributor.contributors.length} contributors")
+                              "${widget.contributor.contributors.length} contributors",
+                            )
                           : Text(
                               "${widget.contributor.contributors.length} contributor",
                             ),
@@ -176,9 +189,7 @@ class _ContributorWidgetState extends State<ContributorWidget> {
                             AssetImage('lib/assets/icons/weight.png'),
                             size: 16,
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 7),
-                          ),
+                          const Padding(padding: EdgeInsets.only(left: 7)),
                           if ((widget.contributor.weight * 100) % 1 != 0)
                             Text(
                               "${(widget.contributor.weight * 100).toStringAsFixed(2)}%",

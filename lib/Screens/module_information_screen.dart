@@ -64,17 +64,12 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
                     return Padding(
                       key: ValueKey(
                         moduleProvider
-                            .modules[moduleName]!
-                            .contributors[index]
-                            .key,
+                            .modules[moduleName]!.contributors[index].key,
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: ContributorWidget(
-                        contributor:
-                            (moduleProvider
-                                    .modules[moduleName]!
-                                    .contributors[index])
-                                as MarkItem,
+                        contributor: (moduleProvider.modules[moduleName]!
+                            .contributors[index]) as MarkItem,
                       ),
                     );
                   },
@@ -97,7 +92,10 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text(moduleProvider.modules[moduleName]!.name),
+          middle: Text(
+            moduleProvider.modules[moduleName]!.name,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -129,7 +127,10 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text(moduleProvider.modules[moduleName]!.name),
+        title: Text(
+          moduleProvider.modules[moduleName]!.name,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_rounded),

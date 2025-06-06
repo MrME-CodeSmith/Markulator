@@ -45,7 +45,10 @@ class _WeightPercentageInputWidgetState
                 },
               ),
             ),
-            const Text("Auto determine"),
+            Text(
+              "Auto determine",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         );
       }),

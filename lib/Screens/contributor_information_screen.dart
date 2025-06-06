@@ -90,7 +90,10 @@ class _ContributorInformationScreenState
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text(parent.name),
+          middle: Text(
+            parent.name,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -122,7 +125,7 @@ class _ContributorInformationScreenState
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text(parent.name),
+        title: Text(parent.name, style: Theme.of(context).textTheme.bodyMedium),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_rounded),
