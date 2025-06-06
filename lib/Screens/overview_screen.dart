@@ -18,11 +18,11 @@ class OverviewScreen extends StatelessWidget {
     final Widget body = LayoutBuilder(
       builder: (ctx, constraints) {
         final bool isWide = constraints.maxWidth > 600;
-        final double carouselHeight = isWide
-            ? constraints.maxHeight
-            : constraints.maxHeight * 0.4;
+        final double carouselHeight =
+            isWide ? constraints.maxHeight : constraints.maxHeight * 0.4;
         final carousel = OverviewScreenAverageCarouselWidget(
           height: carouselHeight,
+          scrollDirection: isWide ? Axis.vertical : Axis.horizontal,
         );
 
         return isWide

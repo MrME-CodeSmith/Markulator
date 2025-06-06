@@ -14,7 +14,7 @@ class PaddedListHeadingWidget extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(7, 7, 3, 0),
       child: Text(
         headingName,
-        style: const TextStyle(fontSize: 22),
+        style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.left,
       ),
     );

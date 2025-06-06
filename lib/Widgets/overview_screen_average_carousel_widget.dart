@@ -6,7 +6,12 @@ import './average_percentage_widget.dart';
 
 class OverviewScreenAverageCarouselWidget extends StatefulWidget {
   final double height;
-  const OverviewScreenAverageCarouselWidget({super.key, required this.height});
+  final Axis scrollDirection;
+  const OverviewScreenAverageCarouselWidget({
+    super.key,
+    required this.height,
+    this.scrollDirection = Axis.horizontal,
+  });
 
   @override
   State<OverviewScreenAverageCarouselWidget> createState() =>
@@ -41,6 +46,7 @@ class _OverviewScreenAverageCarouselWidgetState
           Expanded(
             child: PageView(
               controller: _controller,
+              scrollDirection: widget.scrollDirection,
               onPageChanged: (i) {
                 setState(() {
                   _index = i;
