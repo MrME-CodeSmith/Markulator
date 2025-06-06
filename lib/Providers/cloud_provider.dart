@@ -65,10 +65,12 @@ class CloudProvider with ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       debugPrint(
-          '❌ [CloudProvider] FirebaseAuthException: ${e.code} – ${e.message}');
+        '❌ [CloudProvider] FirebaseAuthException: ${e.code} – ${e.message}',
+      );
     } catch (e) {
       debugPrint(
-          '❌ [CloudProvider] Unexpected error during Google sign-in: $e');
+        '❌ [CloudProvider] Unexpected error during Google sign-in: $e',
+      );
     }
 
     // Notify listeners because `user` may have changed
@@ -113,8 +115,10 @@ class CloudProvider with ChangeNotifier {
     if (!cloudEnabled) return null;
 
     try {
-      final doc =
-          await _firestore.collection('userModules').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
 
       final data = doc.data()!;
@@ -133,12 +137,17 @@ class CloudProvider with ChangeNotifier {
 
   /// Always fetches the modules for the signed in user regardless of
   /// `lastUpdated`. Useful for development and testing utilities.
-  Future<List<Map<String, dynamic>>?> fetchAllModules() async {
-    if (!cloudEnabled) return null;
+  Future<List<Map<String, dynamic>>?> fetchAllModules({
+    bool force = false,
+  }) async {
+    if (!force && !cloudEnabled) return null;
+    if (user == null) return null;
 
     try {
-      final doc =
-          await _firestore.collection('userModules').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
 
       final data = doc.data()!;

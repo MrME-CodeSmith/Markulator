@@ -50,7 +50,8 @@ class ModuleProvider with ChangeNotifier {
   void _sync() {
     if (_cloudProvider != null) {
       _cloudProvider!.syncModules(
-          _modules.values.map((e) => (e as MarkItem).toMap()).toList());
+        _modules.values.map((e) => (e as MarkItem).toMap()).toList(),
+      );
     }
   }
 
@@ -74,14 +75,15 @@ class ModuleProvider with ChangeNotifier {
   Future<void> forceUploadToCloud() async {
     if (_cloudProvider != null) {
       await _cloudProvider!.syncModules(
-          _modules.values.map((e) => (e as MarkItem).toMap()).toList());
+        _modules.values.map((e) => (e as MarkItem).toMap()).toList(),
+      );
     }
   }
 
   /// Forces fetching modules from the cloud and overwriting local data.
   Future<void> forceLoadFromCloud() async {
     if (_cloudProvider != null) {
-      final data = await _cloudProvider!.fetchAllModules();
+      final data = await _cloudProvider!.fetchAllModules(force: true);
       if (data != null) {
         await _loadFromRemote(data);
         notifyListeners();
@@ -218,8 +220,9 @@ class ModuleProvider with ChangeNotifier {
     MarkItem m = MarkItem(
       name: name,
       mark: mark /= 100,
-      contributors:
-          (contributors != null) ? contributors : HiveList(_storedModules),
+      contributors: (contributors != null)
+          ? contributors
+          : HiveList(_storedModules),
       autoWeight: true,
       parent: null,
       weight: 0,
@@ -295,10 +298,11 @@ class ModuleProvider with ChangeNotifier {
     _sync();
   }
 
-  void reorderContributors(
-      {required MarkItem parent,
-      required int oldIndex,
-      required int newIndex}) {
+  void reorderContributors({
+    required MarkItem parent,
+    required int oldIndex,
+    required int newIndex,
+  }) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
