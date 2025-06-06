@@ -70,10 +70,9 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: Colors.black),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge!.copyWith(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -123,8 +122,11 @@ class _ModuleWidgetState extends State<ModuleWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               (moduleProvider.modules[widget.id]!.contributors.isNotEmpty)
-                  ? const Text('Rename')
-                  : const Text('Edit'),
+                  ? Text(
+                      'Rename',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    )
+                  : Text('Edit', style: Theme.of(context).textTheme.bodyMedium),
               const Icon(Icons.edit_rounded),
             ],
           ),
@@ -134,7 +136,7 @@ class _ModuleWidgetState extends State<ModuleWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Remove'),
+              Text('Remove', style: Theme.of(context).textTheme.bodyMedium),
               Icon(
                 Icons.delete_rounded,
                 color: Theme.of(context).colorScheme.error,
@@ -160,8 +162,14 @@ class _ModuleWidgetState extends State<ModuleWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 (moduleProvider.modules[widget.id]!.contributors.isNotEmpty)
-                    ? const Text('Rename')
-                    : const Text('Edit'),
+                    ? Text(
+                        'Rename',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
+                    : Text(
+                        'Edit',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                 const Icon(CupertinoIcons.pencil),
               ],
             ),
@@ -174,8 +182,8 @@ class _ModuleWidgetState extends State<ModuleWidget> {
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text('Remove'),
+              children: [
+                Text('Remove', style: Theme.of(context).textTheme.bodyMedium),
                 Icon(CupertinoIcons.delete_solid),
               ],
             ),
@@ -183,7 +191,7 @@ class _ModuleWidgetState extends State<ModuleWidget> {
         ],
         cancelButton: CupertinoActionSheetAction(
           onPressed: () => Navigator.of(ctx).pop(),
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium),
         ),
       ),
     );
@@ -220,21 +228,25 @@ class _ModuleWidgetState extends State<ModuleWidget> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Are you sure?"),
+        title: Text(
+          "Are you sure?",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         content: Text(
           "Do you want to remove ${moduleProvider.modules[widget.id]!.name} with all its sub-contents?",
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
           TextButton.icon(
             icon: const Icon(Icons.cancel_rounded),
-            label: const Text("No"),
+            label: Text("No", style: Theme.of(context).textTheme.bodyMedium),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
           ),
           TextButton.icon(
             icon: const Icon(Icons.check_rounded),
-            label: const Text("Yes"),
+            label: Text("Yes", style: Theme.of(context).textTheme.bodyMedium),
             onPressed: () {
               moduleProvider.removeModule(key: widget.id);
               Navigator.of(ctx).pop(false);

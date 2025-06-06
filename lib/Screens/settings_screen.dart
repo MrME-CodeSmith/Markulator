@@ -18,14 +18,22 @@ class SettingsScreen extends StatelessWidget {
 
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(middle: Text('Settings')),
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(
+            'Settings',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
         child: SafeArea(
           child: ListView(
             children: [
               CupertinoListSection.insetGrouped(
                 children: [
                   CupertinoListTile(
-                    title: const Text('Store data in cloud'),
+                    title: Text(
+                      'Store data in cloud',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     trailing: CupertinoSwitch(
                       value: cloud.cloudEnabled,
                       onChanged: (val) async {
@@ -45,7 +53,10 @@ class SettingsScreen extends StatelessWidget {
                       await modules.syncOnCloudEnabled(context);
                     }
                   },
-                  child: const Text('Sign in with Google'),
+                  child: Text(
+                    'Sign in with Google',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 )
               else
                 Column(
@@ -53,6 +64,7 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 8),
                     CupertinoButton(
@@ -60,7 +72,10 @@ class SettingsScreen extends StatelessWidget {
                       onPressed: () async {
                         await cloud.signOut();
                       },
-                      child: const Text('Logout'),
+                      child: Text(
+                        'Logout',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                   ],
                 ),
@@ -72,7 +87,10 @@ class SettingsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushNamed(DevTestScreen.routeName);
                     },
-                    child: const Text('Developer DB Test'),
+                    child: Text(
+                      'Developer DB Test',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                 ),
             ],
@@ -83,12 +101,17 @@ class SettingsScreen extends StatelessWidget {
 
     // Android (and other) branch: Material design
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: Text('Settings', style: Theme.of(context).textTheme.bodyMedium),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           ListTile(
-            title: const Text('Store data in cloud'),
+            title: Text(
+              'Store data in cloud',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             trailing: Switch(
               value: cloud.cloudEnabled,
               onChanged: (val) async {
@@ -107,19 +130,28 @@ class SettingsScreen extends StatelessWidget {
                   await modules.syncOnCloudEnabled(context);
                 }
               },
-              child: const Text('Sign in with Google'),
+              child: Text(
+                'Sign in with Google',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             )
           else
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Logged in as: ${cloud.user!.email ?? cloud.user!.uid}'),
+                Text(
+                  'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () async {
                     await cloud.signOut();
                   },
-                  child: const Text('Logout'),
+                  child: Text(
+                    'Logout',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ],
             ),
@@ -132,7 +164,10 @@ class SettingsScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed(DevTestScreen.routeName);
                 },
-                child: const Text('Developer DB Test'),
+                child: Text(
+                  'Developer DB Test',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             ),
         ],

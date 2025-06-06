@@ -43,17 +43,20 @@ class _ContributorCreationUserInputWidgetState
     super.initState();
 
     _nameController = TextEditingController(
-        text: (widget.toEdit != null) ? widget.toEdit!.name : "");
+      text: (widget.toEdit != null) ? widget.toEdit!.name : "",
+    );
 
     _wightController = TextEditingController(
-        text: (widget.toEdit != null)
-            ? ((widget.toEdit!.weight * 100).toStringAsFixed(2))
-            : "");
+      text: (widget.toEdit != null)
+          ? ((widget.toEdit!.weight * 100).toStringAsFixed(2))
+          : "",
+    );
 
     _percentageController = TextEditingController(
-        text: (widget.toEdit != null)
-            ? ((widget.toEdit!.mark * 100).toStringAsFixed(2))
-            : "");
+      text: (widget.toEdit != null)
+          ? ((widget.toEdit!.mark * 100).toStringAsFixed(2))
+          : "",
+    );
 
     checked = Boolean(
       value: (widget.toEdit != null) ? widget.toEdit!.autoWeight : false,
@@ -85,15 +88,19 @@ class _ContributorCreationUserInputWidgetState
         child: ListView(
           children: <Widget>[
             Container(
-                alignment: Alignment.center,
-                child: (widget.toEdit == null)
-                    ? const PaddedListHeadingWidget(
-                        headingName: "Add mark contributor")
-                    : const PaddedListHeadingWidget(
-                        headingName: "Update mark contributor")),
+              alignment: Alignment.center,
+              child: (widget.toEdit == null)
+                  ? const PaddedListHeadingWidget(
+                      headingName: "Add mark contributor",
+                    )
+                  : const PaddedListHeadingWidget(
+                      headingName: "Update mark contributor",
+                    ),
+            ),
             Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: widget.screenWidth * 0.1),
+              padding: EdgeInsets.symmetric(
+                horizontal: widget.screenWidth * 0.1,
+              ),
               child: Divider(
                 color: Theme.of(context).colorScheme.secondary,
                 thickness: 1.5,
@@ -104,10 +111,11 @@ class _ContributorCreationUserInputWidgetState
               child: TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Contributor name',
-                    contentPadding: EdgeInsets.only(left: 7),
-                    hintText: "Super cool module 01"),
+                  border: UnderlineInputBorder(),
+                  labelText: 'Contributor name',
+                  contentPadding: EdgeInsets.only(left: 7),
+                  hintText: "Super cool module 01",
+                ),
               ),
             ),
             Padding(
@@ -146,11 +154,9 @@ class _ContributorCreationUserInputWidgetState
                 child: ElevatedButton(
                   style: ButtonStyle(
                     alignment: Alignment.center,
-                    padding:
-                        WidgetStateProperty.all(const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 20,
-                    )),
+                    padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                    ),
                   ),
                   onPressed: () {
                     if (widget.toEdit == null) {
@@ -169,7 +175,12 @@ class _ContributorCreationUserInputWidgetState
                         autoWeight: checked.wrappedValue,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Contributor added')),
+                        SnackBar(
+                          content: Text(
+                            'Contributor added',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
                       );
                     } else {
                       moduleProvider.updateContributor(
@@ -188,22 +199,34 @@ class _ContributorCreationUserInputWidgetState
                         parent: widget.toEdit!.parent!,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Contributor updated')),
+                        SnackBar(
+                          content: Text(
+                            'Contributor updated',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
                       );
                     }
 
                     Navigator.of(context).pop();
                   },
                   child: (widget.toEdit == null)
-                      ? const Text("Add")
-                      : const Text("Update"),
+                      ? Text(
+                          "Add",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
+                      : Text(
+                          "Update",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                 ),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-            )
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+            ),
           ],
         ),
       ),

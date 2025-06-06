@@ -57,17 +57,23 @@ class _DevTestScreenState extends State<DevTestScreen> {
   }
 
   void _showModulesDialog(BuildContext context, ModuleProvider modules) {
-    final jsonStr = const JsonEncoder.withIndent('  ')
-        .convert(modules.exportLocalModules());
+    final jsonStr = const JsonEncoder.withIndent(
+      '  ',
+    ).convert(modules.exportLocalModules());
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Local Modules'),
-        content: SingleChildScrollView(child: Text(jsonStr)),
+        title: Text(
+          'Local Modules',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        content: SingleChildScrollView(
+          child: Text(jsonStr, style: Theme.of(context).textTheme.bodyMedium),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+            child: Text('Close', style: Theme.of(context).textTheme.bodyMedium),
           ),
         ],
       ),
@@ -85,13 +91,21 @@ class _DevTestScreenState extends State<DevTestScreen> {
 
     if (cloud.user == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Developer DB Test')),
+        appBar: AppBar(
+          title: Text(
+            'Developer DB Test',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
               await cloud.signInWithGoogle();
             },
-            child: const Text('Sign in to use developer tools'),
+            child: Text(
+              'Sign in to use developer tools',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         ),
       );
@@ -101,7 +115,10 @@ class _DevTestScreenState extends State<DevTestScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Developer DB Test'),
+        title: Text(
+          'Developer DB Test',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -109,7 +126,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
             onPressed: () async {
               await cloud.signOut();
             },
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -117,7 +134,10 @@ class _DevTestScreenState extends State<DevTestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Logged in as: ${cloud.user!.email ?? cloud.user!.uid}'),
+            Text(
+              'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -134,10 +154,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
                     decoration: const InputDecoration(labelText: 'Value'),
                   ),
                 ),
-                IconButton(
-                  onPressed: _save,
-                  icon: const Icon(Icons.save),
-                )
+                IconButton(onPressed: _save, icon: const Icon(Icons.save)),
               ],
             ),
             const SizedBox(height: 10),
@@ -147,28 +164,46 @@ class _DevTestScreenState extends State<DevTestScreen> {
               children: [
                 ElevatedButton(
                   onPressed: _clearDeveloperBox,
-                  child: const Text('Clear Dev Box'),
+                  child: Text(
+                    'Clear Dev Box',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () => modules.clearLocalModules(),
-                  child: const Text('Clear Local Modules'),
+                  child: Text(
+                    'Clear Local Modules',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () => modules.forceLoadFromCloud(),
-                  child: const Text('Force Download'),
+                  child: Text(
+                    'Force Download',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () => modules.forceUploadToCloud(),
-                  child: const Text('Force Upload'),
+                  child: Text(
+                    'Force Upload',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () => _showModulesDialog(context, modules),
-                  child: const Text('Show Local Modules'),
+                  child: Text(
+                    'Show Local Modules',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            Text('Dev Box Entries:', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Dev Box Entries:',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -176,7 +211,10 @@ class _DevTestScreenState extends State<DevTestScreen> {
               itemBuilder: (context, index) {
                 final e = entries[index];
                 return ListTile(
-                  title: Text('${e.key}: ${e.value}'),
+                  title: Text(
+                    '${e.key}: ${e.value}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => _delete(e.key as String),
