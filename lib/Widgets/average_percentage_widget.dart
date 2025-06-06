@@ -47,9 +47,15 @@ class AveragePercentageWidget extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(top: constraints.maxHeight * 0.3),
-                  child: PercentageIndicatorWidget(
-                    percentage: percentage,
-                    indicatorSize: Size.large,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 300,
+                      maxWidth: 400,
+                    ),
+                    child: PercentageIndicatorWidget(
+                      percentage: percentage,
+                      indicatorSize: Size.large,
+                    ),
                   ),
                 ),
               ),

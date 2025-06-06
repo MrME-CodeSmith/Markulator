@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +15,67 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<SystemInformationProvider>(context).initialize(context);
+    final orientation = MediaQuery.of(context).orientation;
+
+    final Widget body = (orientation == Orientation.portrait)
+        ? const Column(
+            children: <Widget>[
+              OverviewScreenAverageCarouselWidget(),
+              Expanded(child: OverviewScreenGridWidget()),
+            ],
+          )
+        : const Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: OverviewScreenAverageCarouselWidget(),
+              ),
+              Expanded(
+                flex: 3,
+                child: OverviewScreenGridWidget(),
+              ),
+            ],
+          );
+
+    if (Platform.isIOS) {
+      return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: const Text('Markulator'),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              Navigator.of(context).pushNamed(SettingsScreen.routeName);
+            },
+            child: const Icon(CupertinoIcons.settings),
+          ),
+        ),
+        child: Stack(
+          children: [
+            SafeArea(child: body),
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: CupertinoButton.filled(
+                onPressed: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (ctx) => Material(
+                      child: ModuleCreationUserInputWidget(toEdit: null),
+                    ),
+                  );
+                },
+                child: const Icon(CupertinoIcons.add),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text("Markulator"),
+        title: const Text('Markulator'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -26,12 +85,7 @@ class OverviewScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Column(
-        children: <Widget>[
-          OverviewScreenAverageCarouselWidget(),
-          OverviewScreenGridWidget(),
-        ],
-      ),
+      body: body,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(

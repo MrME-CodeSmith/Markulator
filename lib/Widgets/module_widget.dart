@@ -25,10 +25,17 @@ class _ModuleWidgetState extends State<ModuleWidget> {
 
   late ModuleProvider moduleProvider;
 
+  int _getCrossAxisCount(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= 900) return 4;
+    if (width >= 600) return 3;
+    return 2;
+  }
+
   @override
   void didChangeDependencies() {
     screenHeight = MediaQuery.of(context).size.height;
-    gridItemWidth = (MediaQuery.of(context).size.width / 2) - 20;
+    gridItemWidth = (MediaQuery.of(context).size.width / _getCrossAxisCount(context)) - 20;
     moduleProvider = Provider.of<ModuleProvider>(context);
     super.didChangeDependencies();
   }
@@ -98,8 +105,10 @@ class _ModuleWidgetState extends State<ModuleWidget> {
             children: [
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: screenHeight * 0.14,
-                  maxWidth: double.infinity,
+                  maxHeight: (screenHeight * 0.14 > 300)
+                      ? 300
+                      : screenHeight * 0.14,
+                  maxWidth: 400,
                   minHeight: 10,
                   minWidth: double.infinity,
                 ),
