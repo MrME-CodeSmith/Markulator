@@ -74,11 +74,11 @@ class _ContributorInformationScreenState
                 ),
               ),
             if (parent.contributors.isEmpty)
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     "No contributors specified.",
-                    style: TextStyle(fontSize: 18),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               ),
