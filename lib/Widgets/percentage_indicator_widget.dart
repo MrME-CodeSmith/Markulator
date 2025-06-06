@@ -34,26 +34,32 @@ class PercentageIndicatorWidget extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: AspectRatio(
-            aspectRatio: 3 / 4,
-            child: CircularPercentIndicator(
-              radius: (indicatorSize == Size.small)
-                  ? screenHeight * 0.05
-                  : screenHeight * 0.14,
-              lineWidth: (indicatorSize == Size.small)
-                  ? screenHeight * 0.013
-                  : screenHeight * 0.03,
-              percent: percentage,
-              progressColor: getColor(percentage, ColorType.progressColor),
-              backgroundColor:
-                  (getColor(percentage, ColorType.backgroundColor))!,
-              circularStrokeCap: CircularStrokeCap.round,
-              animation: true,
-              animationDuration: 1250,
-              arcType: (indicatorSize == Size.large) ? ArcType.HALF : null,
-              arcBackgroundColor: (indicatorSize == Size.large)
-                  ? getColor(percentage, ColorType.backgroundColor)
-                  : null,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 300,
+              maxWidth: 400,
+            ),
+            child: AspectRatio(
+              aspectRatio: 3 / 4,
+              child: CircularPercentIndicator(
+                radius: (indicatorSize == Size.small)
+                    ? screenHeight * 0.05
+                    : screenHeight * 0.14,
+                lineWidth: (indicatorSize == Size.small)
+                    ? screenHeight * 0.013
+                    : screenHeight * 0.03,
+                percent: percentage,
+                progressColor: getColor(percentage, ColorType.progressColor),
+                backgroundColor:
+                    (getColor(percentage, ColorType.backgroundColor))!,
+                circularStrokeCap: CircularStrokeCap.round,
+                animation: true,
+                animationDuration: 1250,
+                arcType: (indicatorSize == Size.large) ? ArcType.HALF : null,
+                arcBackgroundColor: (indicatorSize == Size.large)
+                    ? getColor(percentage, ColorType.backgroundColor)
+                    : null,
+              ),
             ),
           ),
         ),
