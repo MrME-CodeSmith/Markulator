@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/module_provider.dart';
-import '../Providers/system_information_provider.dart';
 import '../Screens/module_information_screen.dart';
 import 'module_creation_user_input.dart';
 import 'percentage_indicator_widget.dart';
@@ -19,26 +18,20 @@ class ModuleWidget extends StatefulWidget {
 }
 
 class _ModuleWidgetState extends State<ModuleWidget> {
-  late SystemInformationProvider systemInformationProvider;
-
-  late double screenHeight;
-
   late double gridItemWidth;
 
   late ModuleProvider moduleProvider;
 
   int _getCrossAxisCount(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    if (width >= 900) return 4;
-    if (width >= 600) return 3;
-    return 2;
+    final count = (width / 160).floor();
+    return (count > 0) ? count : 1;
   }
 
   @override
   void didChangeDependencies() {
-    screenHeight = MediaQuery.of(context).size.height;
     gridItemWidth =
-        (MediaQuery.of(context).size.width / _getCrossAxisCount(context)) - 20;
+        MediaQuery.of(context).size.width / _getCrossAxisCount(context);
     moduleProvider = Provider.of<ModuleProvider>(context);
     super.didChangeDependencies();
   }
@@ -62,16 +55,10 @@ class _ModuleWidgetState extends State<ModuleWidget> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: (screenHeight * 0.14 > 300)
-                          ? 300
-                          : screenHeight * 0.14,
-                      maxWidth: 400,
-                      minHeight: 10,
-                      minWidth: double.infinity,
-                    ),
+                  SizedBox(
+                    height: gridItemWidth * 0.6,
                     child: PercentageIndicatorWidget(
                       percentage: module.mark,
                       indicatorSize: Size.small,
