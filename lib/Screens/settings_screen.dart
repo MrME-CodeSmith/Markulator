@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import '../Providers/cloud_provider.dart';
 import '../Providers/module_provider.dart';
+import '../Providers/settings_provider.dart';
 import 'dev_test_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -15,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cloud = Provider.of<CloudProvider>(context);
     final modules = Provider.of<ModuleProvider>(context, listen: false);
+    final settings = Provider.of<SettingsProvider>(context);
 
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
@@ -40,6 +42,16 @@ class SettingsScreen extends StatelessWidget {
                         cloud.setCloudEnabled(val);
                         if (val) await modules.syncOnCloudEnabled(context);
                       },
+                    ),
+                  ),
+                  CupertinoListTile(
+                    title: Text(
+                      'Dark mode',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    trailing: CupertinoSwitch(
+                      value: settings.darkMode,
+                      onChanged: (val) => settings.setDarkMode(val),
                     ),
                   ),
                 ],
@@ -118,6 +130,16 @@ class SettingsScreen extends StatelessWidget {
                 cloud.setCloudEnabled(val);
                 if (val) await modules.syncOnCloudEnabled(context);
               },
+            ),
+          ),
+          ListTile(
+            title: Text(
+              'Dark mode',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            trailing: Switch(
+              value: settings.darkMode,
+              onChanged: (val) => settings.setDarkMode(val),
             ),
           ),
           const SizedBox(height: 20),

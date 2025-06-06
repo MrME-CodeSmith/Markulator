@@ -179,4 +179,35 @@ class CloudProvider with ChangeNotifier {
 
     return null;
   }
+
+  // ---------------------------------------------------------------------------
+  // Settings Synchronization
+  // ---------------------------------------------------------------------------
+
+  Future<void> syncSettings(Map<String, dynamic> settings) async {
+    if (!cloudEnabled) return;
+    try {
+      await _firestore
+          .collection('userSettings')
+          .doc(user!.uid)
+          .set(settings, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('❌ [CloudProvider] Failed to sync settings: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchSettings() async {
+    if (!cloudEnabled) return null;
+    try {
+      final doc = await _firestore
+          .collection('userSettings')
+          .doc(user!.uid)
+          .get();
+      if (!doc.exists) return null;
+      return doc.data();
+    } catch (e) {
+      debugPrint('❌ [CloudProvider] Error fetching settings: $e');
+      return null;
+    }
+  }
 }
