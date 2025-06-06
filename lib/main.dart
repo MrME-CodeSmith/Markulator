@@ -67,6 +67,8 @@ class Markulator extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.blueGrey,
           ),
+          useMaterial3: true,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const OverviewScreen(),
         routes: {

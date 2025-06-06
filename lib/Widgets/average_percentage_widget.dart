@@ -39,10 +39,13 @@ class AveragePercentageWidget extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   title: Text(
                     heading,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSecondary,
+                        ),
                   ),
                 ),
                 child: Padding(

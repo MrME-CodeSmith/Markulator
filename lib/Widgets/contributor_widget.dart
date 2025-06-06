@@ -154,7 +154,7 @@ class _ContributorWidgetState extends State<ContributorWidget> {
                 ),
                 title: Text(
                   widget.contributor.name,
-                  style: const TextStyle(fontSize: 18),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 subtitle: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
