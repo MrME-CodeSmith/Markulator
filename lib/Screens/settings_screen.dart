@@ -1,8 +1,10 @@
 import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import '../Providers/cloud_provider.dart';
+import 'dev_test_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const routeName = '/settings';
@@ -42,6 +44,16 @@ class SettingsScreen extends StatelessWidget {
                 child: const Text('Logout'),
               ),
             ],
+          ),
+        if (!kReleaseMode)
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(DevTestScreen.routeName);
+              },
+              child: const Text('Developer DB Test'),
+            ),
           ),
       ],
     );

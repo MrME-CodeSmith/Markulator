@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,6 +126,29 @@ class CloudProvider with ChangeNotifier {
       }
     } catch (e) {
       debugPrint('❌ [CloudProvider] Error fetching modules: $e');
+    }
+
+    return null;
+  }
+
+  /// Always fetches the modules for the signed in user regardless of
+  /// `lastUpdated`. Useful for development and testing utilities.
+  Future<List<Map<String, dynamic>>?> fetchAllModules() async {
+    if (!cloudEnabled) return null;
+
+    try {
+      final doc =
+          await _firestore.collection('userModules').doc(user!.uid).get();
+      if (!doc.exists) return null;
+
+      final data = doc.data()!;
+      final remoteTs = (data['lastUpdated'] as Timestamp?)?.toDate();
+      if (remoteTs != null) {
+        _updateLastUpdated(remoteTs);
+      }
+      return List<Map<String, dynamic>>.from(data['modules'] as List);
+    } catch (e) {
+      debugPrint('❌ [CloudProvider] Error fetching all modules: $e');
     }
 
     return null;
