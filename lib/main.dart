@@ -64,24 +64,10 @@ class Markulator extends StatelessWidget {
       child: MaterialApp(
         title: 'Markulator',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blueGrey,
+          ),
         ),
-        // theme: ThemeData.light()
-        // ThemeData(
-        //   colorScheme: const ColorScheme(
-        //     brightness: Brightness.light,
-        //     primary: Color.fromARGB(255, 189, 194, 198),
-        //     onPrimary: Colors.white,
-        //     secondary: Color.fromARGB(255, 248, 249, 249),
-        //     onSecondary: Color.fromARGB(255, 189, 194, 198),
-        //     error: Colors.red,
-        //     onError: Color.fromARGB(255, 248, 249, 249),
-        //     background: Color.fromARGB(255, 214, 218, 220),
-        //     onBackground: Color.fromARGB(255, 189, 194, 198),
-        //     surface: Color.fromARGB(255, 235, 236, 237),
-        //     onSurface: Color.fromARGB(255, 189, 194, 198),
-        //   ),
-        // ),
         home: const OverviewScreen(),
         routes: {
           ModuleInformationScreen.routeName: ((context) =>

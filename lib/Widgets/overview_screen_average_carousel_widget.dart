@@ -38,51 +38,67 @@ class _OverviewScreenAverageCarouselWidgetState
   @override
   Widget build(BuildContext context) {
     final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
-    return SizedBox(
-      width: double.infinity,
-      height: widget.height,
-      child: Column(
+    final List<Widget> indicators = List.generate(
+      2,
+      (i) => Container(
+        margin: const EdgeInsets.all(4),
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: (_index == i)
+              ? Theme.of(context).colorScheme.primary
+              : Colors.grey,
+        ),
+      ),
+    );
+
+    final pageView = Expanded(
+      child: PageView(
+        controller: _controller,
+        scrollDirection: widget.scrollDirection,
+        onPageChanged: (i) {
+          setState(() {
+            _index = i;
+          });
+        },
         children: [
-          Expanded(
-            child: PageView(
-              controller: _controller,
-              scrollDirection: widget.scrollDirection,
-              onPageChanged: (i) {
-                setState(() {
-                  _index = i;
-                });
-              },
-              children: [
-                AveragePercentageWidget(
-                  percentage: moduleProvider.averageModulesMark,
-                  heading: 'Modules average',
-                ),
-                AveragePercentageWidget(
-                  percentage: moduleProvider.weightedAverageModulesMark,
-                  heading: 'Weighted average',
-                ),
-              ],
-            ),
+          AveragePercentageWidget(
+            percentage: moduleProvider.averageModulesMark,
+            heading: 'Modules average',
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              2,
-              (i) => Container(
-                margin: const EdgeInsets.all(4),
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (_index == i)
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey,
-                ),
-              ),
-            ),
+          AveragePercentageWidget(
+            percentage: moduleProvider.weightedAverageModulesMark,
+            heading: 'Weighted average',
           ),
         ],
       ),
+    );
+
+    final indicatorWidget = widget.scrollDirection == Axis.vertical
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: indicators,
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: indicators,
+          );
+
+    return SizedBox(
+      width: double.infinity,
+      height: widget.height,
+      child: widget.scrollDirection == Axis.vertical
+          ? Row(
+              children: [
+                pageView,
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: indicatorWidget,
+                ),
+              ],
+            )
+          : Column(children: [pageView, indicatorWidget]),
     );
   }
 }
