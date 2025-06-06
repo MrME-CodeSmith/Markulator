@@ -15,27 +15,31 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<SystemInformationProvider>(context).initialize(context);
-    final orientation = MediaQuery.of(context).orientation;
+    final Widget body = LayoutBuilder(
+      builder: (ctx, constraints) {
+        final bool isWide = constraints.maxWidth > 600;
+        final double carouselHeight = isWide
+            ? constraints.maxHeight
+            : constraints.maxHeight * 0.4;
+        final carousel = OverviewScreenAverageCarouselWidget(
+          height: carouselHeight,
+        );
 
-    final Widget body = (orientation == Orientation.portrait)
-        ? const Column(
-            children: <Widget>[
-              OverviewScreenAverageCarouselWidget(),
-              Expanded(child: OverviewScreenGridWidget()),
-            ],
-          )
-        : const Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: OverviewScreenAverageCarouselWidget(),
-              ),
-              Expanded(
-                flex: 3,
-                child: OverviewScreenGridWidget(),
-              ),
-            ],
-          );
+        return isWide
+            ? Row(
+                children: [
+                  Expanded(flex: 2, child: carousel),
+                  const Expanded(flex: 3, child: OverviewScreenGridWidget()),
+                ],
+              )
+            : Column(
+                children: [
+                  carousel,
+                  const Expanded(child: OverviewScreenGridWidget()),
+                ],
+              );
+      },
+    );
 
     if (Platform.isIOS) {
       return CupertinoPageScaffold(
@@ -93,11 +97,11 @@ class OverviewScreen extends StatelessWidget {
             context: context,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
-                  bottom: Radius.zero, top: Radius.circular(14)),
+                bottom: Radius.zero,
+                top: Radius.circular(14),
+              ),
             ),
-            builder: (ctx) => const ModuleCreationUserInputWidget(
-              toEdit: null,
-            ),
+            builder: (ctx) => const ModuleCreationUserInputWidget(toEdit: null),
           );
         },
         icon: const Icon(Icons.add),

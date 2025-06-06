@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
-import '../Providers/system_information_provider.dart';
+enum ColorType { progressColor, backgroundColor }
 
-enum ColorType {
-  progressColor,
-  backgroundColor,
-}
-
-enum Size {
-  large,
-  small,
-}
+enum Size { large, small }
 
 class PercentageIndicatorWidget extends StatelessWidget {
   final double percentage;
@@ -26,47 +18,58 @@ class PercentageIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final systemInformationProvider =
-        Provider.of<SystemInformationProvider>(context);
-    final screenHeight = systemInformationProvider.androidAvailableScreenHeight(
-        context: context);
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final shortestSide = math.min(
+          constraints.maxHeight,
+          constraints.maxWidth,
+        );
+        final radius = (indicatorSize == Size.small)
+            ? shortestSide * 0.4
+            : shortestSide * 0.45;
+        final lineWidth = (indicatorSize == Size.small)
+            ? radius * 0.26
+            : radius * 0.22;
 
-    return Stack(
-      children: [
-        Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 300,
-              maxWidth: 400,
-            ),
-            child: AspectRatio(
-              aspectRatio: 3 / 4,
-              child: CircularPercentIndicator(
-                radius: (indicatorSize == Size.small)
-                    ? screenHeight * 0.05
-                    : screenHeight * 0.14,
-                lineWidth: (indicatorSize == Size.small)
-                    ? screenHeight * 0.013
-                    : screenHeight * 0.03,
-                percent: percentage,
-                progressColor: getColor(percentage, ColorType.progressColor),
-                backgroundColor:
-                    (getColor(percentage, ColorType.backgroundColor))!,
-                circularStrokeCap: CircularStrokeCap.round,
-                animation: true,
-                animationDuration: 1250,
-                arcType: (indicatorSize == Size.large) ? ArcType.HALF : null,
-                arcBackgroundColor: (indicatorSize == Size.large)
-                    ? getColor(percentage, ColorType.backgroundColor)
-                    : null,
+        return Stack(
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 300,
+                  maxWidth: 400,
+                ),
+                child: AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: CircularPercentIndicator(
+                    radius: radius,
+                    lineWidth: lineWidth,
+                    percent: percentage,
+                    progressColor: getColor(
+                      percentage,
+                      ColorType.progressColor,
+                    ),
+                    backgroundColor: (getColor(
+                      percentage,
+                      ColorType.backgroundColor,
+                    ))!,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    animation: true,
+                    animationDuration: 1250,
+                    arcType: (indicatorSize == Size.large)
+                        ? ArcType.HALF
+                        : null,
+                    arcBackgroundColor: (indicatorSize == Size.large)
+                        ? getColor(percentage, ColorType.backgroundColor)
+                        : null,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Center(
-          child: getText(),
-        )
-      ],
+            Center(child: getText()),
+          ],
+        );
+      },
     );
   }
 
