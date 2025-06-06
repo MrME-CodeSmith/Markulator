@@ -66,27 +66,30 @@ class PercentageIndicatorWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Center(child: getText()),
+            Center(child: getText(context)),
           ],
         );
       },
     );
   }
 
-  Text getText() {
+  Text getText(BuildContext context) {
+    final smallStyle = Theme.of(context)
+        .textTheme
+        .labelMedium!
+        .copyWith(color: Colors.black);
+    final largeStyle =
+        Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black);
+
     if ((percentage * 100) % 1 > 0) {
       return Text(
         "${(percentage * 100).toStringAsFixed(2)}%",
-        style: (indicatorSize == Size.small)
-            ? const TextStyle(fontSize: 12, color: Colors.black)
-            : const TextStyle(fontSize: 25, color: Colors.black),
+        style: (indicatorSize == Size.small) ? smallStyle : largeStyle,
       );
     } else {
       return Text(
-        "${(percentage * 100).toInt().toString()}%",
-        style: (indicatorSize == Size.small)
-            ? const TextStyle(fontSize: 12, color: Colors.black)
-            : const TextStyle(fontSize: 25, color: Colors.black),
+        "${(percentage * 100).toInt()}%",
+        style: (indicatorSize == Size.small) ? smallStyle : largeStyle,
       );
     }
   }

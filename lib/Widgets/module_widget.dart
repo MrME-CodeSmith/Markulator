@@ -70,7 +70,10 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 18, color: Colors.black),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -82,7 +85,7 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                         module.credits.toStringAsFixed(
                           module.credits % 1 == 0 ? 0 : 1,
                         ),
-                        style: const TextStyle(fontSize: 14),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),

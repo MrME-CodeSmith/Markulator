@@ -81,11 +81,11 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
                 ),
               ),
             if (moduleProvider.modules[moduleName]!.contributors.isEmpty)
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     "No Contributors available.",
-                    style: TextStyle(fontSize: 18),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               ),
