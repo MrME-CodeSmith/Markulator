@@ -12,9 +12,8 @@ class OverviewScreenGridWidget extends StatelessWidget {
 
   int _getCrossAxisCount(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    if (width >= 900) return 4;
-    if (width >= 600) return 3;
-    return 2;
+    final count = (width / 160).floor();
+    return (count > 0) ? count : 1;
   }
 
   @override
@@ -33,7 +32,7 @@ class OverviewScreenGridWidget extends StatelessWidget {
                       child: ReorderableGridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: _getCrossAxisCount(context),
-                          childAspectRatio: 1.1,
+                          childAspectRatio: 0.8,
                           crossAxisSpacing: 14,
                           mainAxisSpacing: 20,
                         ),
