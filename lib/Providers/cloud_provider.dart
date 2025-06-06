@@ -15,6 +15,7 @@ class CloudProvider with ChangeNotifier {
 
   CloudProvider() {
     _syncBox = Hive.box(syncInfoBox);
+    _cloudEnabled = _syncBox.get('cloudEnabled', defaultValue: false) as bool;
 
     // Notify listeners whenever the FirebaseAuth user changes.
     _auth.authStateChanges().listen((_) => notifyListeners());
@@ -26,6 +27,21 @@ class CloudProvider with ChangeNotifier {
 
   void _updateLastUpdated(DateTime time) {
     _syncBox.put('lastUpdated', time);
+  }
+
+  Future<DateTime?> fetchRemoteLastUpdated() async {
+    if (user == null) return null;
+    try {
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
+      if (!doc.exists) return null;
+      return (doc.data()?["lastUpdated"] as Timestamp?)?.toDate();
+    } catch (e) {
+      debugPrint('❌ [CloudProvider] Error fetching remote timestamp: $e');
+      return null;
+    }
   }
 
   /// Attempts to sign in via Google.
@@ -93,6 +109,7 @@ class CloudProvider with ChangeNotifier {
 
   void setCloudEnabled(bool value) {
     _cloudEnabled = value;
+    _syncBox.put('cloudEnabled', value);
     notifyListeners();
   }
 

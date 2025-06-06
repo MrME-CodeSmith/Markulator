@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../Model/module_model.dart';
@@ -10,15 +12,24 @@ import 'cloud_provider.dart';
 class ModuleProvider with ChangeNotifier {
   late final dynamic _storedModules;
   late final Map<dynamic, dynamic> _modules;
+  late final Box _syncBox;
   CloudProvider? _cloudProvider;
 
   ModuleProvider() {
     _storedModules = Hive.box(userModulesBox);
+    _syncBox = Hive.box(syncInfoBox);
     _modules = _storedModules.toMap();
 
     _modules.removeWhere((key, value) => value.parent != null);
 
     _modules.forEach((key, value) => setAppropriateParent(value));
+  }
+
+  DateTime? get localLastUpdated =>
+      _syncBox.get('localLastUpdated') as DateTime?;
+
+  void _updateLocalLastUpdated([DateTime? time]) {
+    _syncBox.put('localLastUpdated', time ?? DateTime.now());
   }
 
   Map<int, MarkItem> get modules {
@@ -42,12 +53,13 @@ class ModuleProvider with ChangeNotifier {
     _cloudProvider = provider;
     final data = await provider.fetchModulesIfNewer();
     if (data != null) {
-      await _loadFromRemote(data);
+      await _loadFromRemote(data, provider.lastUpdated);
       notifyListeners();
     }
   }
 
   void _sync() {
+    _updateLocalLastUpdated();
     if (_cloudProvider != null) {
       _cloudProvider!.syncModules(
         _modules.values.map((e) => (e as MarkItem).toMap()).toList(),
@@ -55,19 +67,24 @@ class ModuleProvider with ChangeNotifier {
     }
   }
 
-  Future<void> _loadFromRemote(List<Map<String, dynamic>> data) async {
+  Future<void> _loadFromRemote(
+    List<Map<String, dynamic>> data, [
+    DateTime? remoteTime,
+  ]) async {
     _modules.clear();
     await _storedModules.clear();
     for (final map in data) {
       final item = MarkItem.fromMap(map, _storedModules);
       _modules[item.key] = item;
     }
+    _updateLocalLastUpdated(remoteTime);
   }
 
   /// Clears all locally stored modules.
   Future<void> clearLocalModules() async {
     _modules.clear();
     await _storedModules.clear();
+    _updateLocalLastUpdated();
     notifyListeners();
   }
 
@@ -85,10 +102,85 @@ class ModuleProvider with ChangeNotifier {
     if (_cloudProvider != null) {
       final data = await _cloudProvider!.fetchAllModules(force: true);
       if (data != null) {
-        await _loadFromRemote(data);
+        await _loadFromRemote(data, _cloudProvider!.lastUpdated);
         notifyListeners();
       }
     }
+  }
+
+  Future<void> syncOnCloudEnabled(BuildContext context) async {
+    if (_cloudProvider == null) return;
+
+    final remoteTs = await _cloudProvider!.fetchRemoteLastUpdated();
+    if (_modules.isEmpty) {
+      if (remoteTs != null) {
+        final data = await _cloudProvider!.fetchAllModules(force: true);
+        if (data != null) {
+          await _loadFromRemote(data, remoteTs);
+          notifyListeners();
+        }
+      }
+      return;
+    }
+
+    final localTs = localLastUpdated;
+    if (remoteTs != null && (localTs == null || remoteTs.isAfter(localTs))) {
+      final useCloud = await _showChoiceDialog(context);
+      if (useCloud == true) {
+        final data = await _cloudProvider!.fetchAllModules(force: true);
+        if (data != null) {
+          await _loadFromRemote(data, remoteTs);
+          notifyListeners();
+        }
+      } else if (useCloud == false) {
+        await forceUploadToCloud();
+      }
+    } else {
+      await forceUploadToCloud();
+    }
+  }
+
+  Future<bool?> _showChoiceDialog(BuildContext context) {
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      return showCupertinoDialog<bool>(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Sync Conflict'),
+          content: const Text(
+            'Cloud data differs from local data. Which version do you want to keep?',
+          ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Local'),
+            ),
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: const Text('Cloud'),
+            ),
+          ],
+        ),
+      );
+    }
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Sync Conflict'),
+        content: const Text(
+          'Cloud data differs from local data. Which version do you want to keep?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Local'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Cloud'),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Returns the current local modules as a list of plain maps. Useful for
