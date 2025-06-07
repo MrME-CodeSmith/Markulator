@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../data/repositories/degree_repository.dart';
 import '../models/degree_year_model.dart';
 import '../models/module_model.dart';
-import 'widgets/average_percentage_widget.dart';
+import 'widgets/statistics_carousel_widget.dart';
 import 'widgets/module_widget.dart';
 
 class DegreeInformationScreen extends StatelessWidget {
@@ -58,9 +58,24 @@ class DegreeInformationScreen extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AveragePercentageWidget(
-            percentage: repo.weightedAverageForYear(year.key as int),
-            heading: 'Year ${year.yearIndex} average',
+          StatisticsCarousel(
+            height: 150,
+            items: [
+              StatisticItem(
+                heading: 'Year ${year.yearIndex} average',
+                value: repo.averageForYear(year.key as int),
+                isPercentage: true,
+              ),
+              StatisticItem(
+                heading: 'Weighted average',
+                value: repo.weightedAverageForYear(year.key as int),
+                isPercentage: true,
+              ),
+              StatisticItem(
+                heading: 'Credits',
+                value: repo.creditsForYear(year.key as int),
+              ),
+            ],
           ),
           modulesGrid,
         ],
@@ -73,9 +88,24 @@ class DegreeInformationScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          AveragePercentageWidget(
-            percentage: repo.weightedAverageForDegree(degreeId),
-            heading: '${degree.name} average',
+          StatisticsCarousel(
+            height: 150,
+            items: [
+              StatisticItem(
+                heading: '${degree.name} average',
+                value: repo.averageForDegree(degreeId),
+                isPercentage: true,
+              ),
+              StatisticItem(
+                heading: 'Weighted average',
+                value: repo.weightedAverageForDegree(degreeId),
+                isPercentage: true,
+              ),
+              StatisticItem(
+                heading: 'Credits',
+                value: repo.creditsForDegree(degreeId),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           ...yearWidgets,

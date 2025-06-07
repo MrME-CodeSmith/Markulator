@@ -58,11 +58,13 @@ void main() {
       degreeRepo.weightedAverageForYear(yearId),
       closeTo(expectedWeighted, 0.0001),
     );
+    expect(degreeRepo.creditsForYear(yearId), 15);
     expect(degreeRepo.averageForDegree(degId), closeTo(0.7, 0.0001));
     expect(
       degreeRepo.weightedAverageForDegree(degId),
       closeTo(expectedWeighted, 0.0001),
     );
+    expect(degreeRepo.creditsForDegree(degId), 15);
 
     degreeRepo.removeYear(degId, yearId);
     expect(degreeRepo.degrees[degId]!.years.isEmpty, true);
