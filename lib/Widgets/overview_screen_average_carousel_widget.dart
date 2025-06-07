@@ -39,7 +39,7 @@ class _OverviewScreenAverageCarouselWidgetState
   Widget build(BuildContext context) {
     final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
     final bool showBoth =
-        widget.scrollDirection == Axis.vertical && widget.height > 350;
+        widget.scrollDirection == Axis.vertical && widget.height > 370;
     final List<Widget> indicators = List.generate(
       2,
       (i) => Container(

@@ -12,15 +12,6 @@ class AveragePercentageWidget extends StatelessWidget {
   final double percentage;
   final String heading;
 
-  String _classificationText() {
-    final value = percentage * 100;
-    if (value >= 70) return 'First class';
-    if (value >= 60) return 'Upper second (2:1)';
-    if (value >= 50) return 'Lower second (2:2)';
-    if (value >= 40) return 'Third class';
-    return 'Fail';
-  }
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -51,17 +42,8 @@ class AveragePercentageWidget extends StatelessWidget {
                   title: Text(
                     heading,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                  ),
-                ),
-                footer: GridTileBar(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  title: Text(
-                    _classificationText(),
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
+                          color: Theme.of(context).colorScheme.onSecondary,
+                        ),
                   ),
                 ),
                 child: Padding(
