@@ -23,6 +23,8 @@ import './data/services/system_information_service.dart';
 import './data/repositories/settings_repository.dart';
 import './view_models/overview_view_model.dart';
 import './view_models/module_info_view_model.dart';
+import './view_models/degree_overview_view_model.dart';
+import './view_models/degree_info_view_model.dart';
 import './view_models/contributor_info_view_model.dart';
 import './view_models/settings_view_model.dart';
 
@@ -122,6 +124,14 @@ class Markulator extends StatelessWidget {
         ),
         ChangeNotifierProvider<ModuleInfoViewModel>(
           create: (_) => ModuleInfoViewModel(repository: moduleRepository),
+        ),
+        ChangeNotifierProvider<DegreeOverviewViewModel>(
+          create: (_) => DegreeOverviewViewModel(
+            repository: degreeRepository,
+          ),
+        ),
+        ChangeNotifierProvider<DegreeInfoViewModel>(
+          create: (_) => DegreeInfoViewModel(repository: degreeRepository),
         ),
         ChangeNotifierProvider<ContributorInfoViewModel>(
           create: (_) => ContributorInfoViewModel(repository: moduleRepository),
