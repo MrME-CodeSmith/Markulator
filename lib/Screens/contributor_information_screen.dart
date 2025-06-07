@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/module_model.dart';
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
@@ -23,12 +23,12 @@ class ContributorInformationScreen extends StatefulWidget {
 class _ContributorInformationScreenState
     extends State<ContributorInformationScreen> {
   late MarkItem parent;
-  late ModuleProvider moduleProvider;
+  late ModuleRepository moduleProvider;
 
   @override
   void didChangeDependencies() {
     parent = ModalRoute.of(context)!.settings.arguments as MarkItem;
-    moduleProvider = Provider.of<ModuleProvider>(context);
+    moduleProvider = Provider.of<ModuleRepository>(context);
     super.didChangeDependencies();
   }
 

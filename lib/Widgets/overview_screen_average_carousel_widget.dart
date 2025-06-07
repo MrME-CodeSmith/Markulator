@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import './average_percentage_widget.dart';
 
 class OverviewScreenAverageCarouselWidget extends StatefulWidget {
@@ -37,7 +37,9 @@ class _OverviewScreenAverageCarouselWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
+    final ModuleRepository moduleProvider = Provider.of<ModuleRepository>(
+      context,
+    );
     final bool showBoth =
         widget.scrollDirection == Axis.vertical && widget.height > 370;
     final List<Widget> indicators = List.generate(

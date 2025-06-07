@@ -8,11 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import './Providers/cloud_provider.dart';
+import './data/services/auth_service.dart';
+import './data/services/cloud_service.dart';
+import './data/services/module_service.dart';
+import './data/repositories/module_repository.dart';
 
 import './Model/module_model.dart';
 import './Screens/overview_screen.dart';
-import './Providers/module_provider.dart';
 import './Providers/system_information_provider.dart';
 import './Providers/settings_provider.dart';
 
@@ -35,16 +37,20 @@ void main() async {
   await Hive.openBox(syncInfoBox);
   await Hive.openBox(settingsBox);
 
-  final ModuleProvider moduleProvider = ModuleProvider();
-  final CloudProvider cloudProvider = CloudProvider();
-  final SettingsProvider settingsProvider =
-      SettingsProvider(cloudProvider: cloudProvider);
-  await moduleProvider.setCloudProvider(cloudProvider);
+  final authService = AuthService();
+  final cloudService = CloudService();
+  final moduleService = ModuleService(cloudService: cloudService);
+  final ModuleRepository moduleProvider = ModuleRepository();
+  final SettingsProvider settingsProvider = SettingsProvider(
+    cloudService: cloudService,
+  );
+  await moduleProvider.setModuleService(moduleService);
 
   runApp(
     Markulator(
       moduleProvider: moduleProvider,
-      cloudProvider: cloudProvider,
+      cloudService: cloudService,
+      authService: authService,
       settingsProvider: settingsProvider,
     ),
   );
@@ -54,12 +60,14 @@ class Markulator extends StatelessWidget {
   const Markulator({
     super.key,
     required this.moduleProvider,
-    required this.cloudProvider,
+    required this.cloudService,
+    required this.authService,
     required this.settingsProvider,
   });
 
-  final ModuleProvider moduleProvider;
-  final CloudProvider cloudProvider;
+  final ModuleRepository moduleProvider;
+  final CloudService cloudService;
+  final AuthService authService;
   final SettingsProvider settingsProvider;
 
   @override
@@ -69,17 +77,18 @@ class Markulator extends StatelessWidget {
         ChangeNotifierProvider<SystemInformationProvider>(
           create: (context) => SystemInformationProvider(),
         ),
-        ChangeNotifierProvider<ModuleProvider>(create: (_) => moduleProvider),
-        ChangeNotifierProvider<CloudProvider>(create: (_) => cloudProvider),
-        ChangeNotifierProvider<SettingsProvider>(create: (_) => settingsProvider),
+        ChangeNotifierProvider<ModuleRepository>(create: (_) => moduleProvider),
+        ChangeNotifierProvider<CloudService>(create: (_) => cloudService),
+        ChangeNotifierProvider<AuthService>(create: (_) => authService),
+        ChangeNotifierProvider<SettingsProvider>(
+          create: (_) => settingsProvider,
+        ),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) => MaterialApp(
           title: 'Markulator',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blueGrey,
-            ),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),

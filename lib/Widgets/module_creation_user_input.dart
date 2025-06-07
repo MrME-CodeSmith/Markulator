@@ -3,7 +3,7 @@ import 'package:markulator/Model/module_model.dart';
 import 'package:markulator/Providers/system_information_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import './padded_list_heading_widget.dart';
 import './percentage_input_widget.dart';
 
@@ -23,7 +23,7 @@ class _ModuleCreationUserInputWidgetState
   late final TextEditingController _percentageController;
   late final TextEditingController _creditsController;
 
-  late ModuleProvider moduleProvider;
+  late ModuleRepository moduleProvider;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _ModuleCreationUserInputWidgetState
 
   @override
   void didChangeDependencies() {
-    moduleProvider = Provider.of<ModuleProvider>(context);
+    moduleProvider = Provider.of<ModuleRepository>(context);
     super.didChangeDependencies();
   }
 

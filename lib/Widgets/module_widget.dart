@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import '../Screens/module_information_screen.dart';
 import 'module_creation_user_input.dart';
 import 'percentage_indicator_widget.dart';
@@ -18,11 +18,11 @@ class ModuleWidget extends StatefulWidget {
 }
 
 class _ModuleWidgetState extends State<ModuleWidget> {
-  late ModuleProvider moduleProvider;
+  late ModuleRepository moduleProvider;
 
   @override
   void didChangeDependencies() {
-    moduleProvider = Provider.of<ModuleProvider>(context);
+    moduleProvider = Provider.of<ModuleRepository>(context);
     super.didChangeDependencies();
   }
 
@@ -81,18 +81,15 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                       const Icon(Icons.school, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        module.credits
-                            .toStringAsFixed(module.credits % 1 == 0 ? 0 : 1),
+                        module.credits.toStringAsFixed(
+                          module.credits % 1 == 0 ? 0 : 1,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: _buildMenuButton(),
-                ),
+                Positioned(top: 0, right: 0, child: _buildMenuButton()),
               ],
             ),
           ),
@@ -227,7 +224,7 @@ class _ModuleWidgetState extends State<ModuleWidget> {
     }
   }
 
-  void confirmDeletion(BuildContext context, ModuleProvider moduleProvider) {
+  void confirmDeletion(BuildContext context, ModuleRepository moduleProvider) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
