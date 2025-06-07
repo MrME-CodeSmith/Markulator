@@ -18,20 +18,10 @@ class ModuleWidget extends StatefulWidget {
 }
 
 class _ModuleWidgetState extends State<ModuleWidget> {
-  late double gridItemWidth;
-
   late ModuleProvider moduleProvider;
-
-  int _getCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final count = (width / 160).floor();
-    return (count > 0) ? count : 1;
-  }
 
   @override
   void didChangeDependencies() {
-    gridItemWidth =
-        MediaQuery.of(context).size.width / _getCrossAxisCount(context);
     moduleProvider = Provider.of<ModuleProvider>(context);
     super.didChangeDependencies();
   }
@@ -39,62 +29,71 @@ class _ModuleWidgetState extends State<ModuleWidget> {
   @override
   Widget build(BuildContext context) {
     final module = moduleProvider.modules[widget.id]!;
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(
-          context,
-        ).pushNamed(ModuleInformationScreen.routeName, arguments: widget.id);
-      },
-      child: Card(
-        color: Theme.of(context).colorScheme.surface,
-        shadowColor: Theme.of(context).colorScheme.primary,
-        elevation: 1,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    height: gridItemWidth * 0.6,
-                    child: PercentageIndicatorWidget(
-                      percentage: module.mark,
-                      indicatorSize: Size.small,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    module.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge!.copyWith(color: Colors.black),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final gridItemWidth = constraints.maxWidth;
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ModuleInformationScreen.routeName,
+              arguments: widget.id,
+            );
+          },
+          child: Card(
+            color: Theme.of(context).colorScheme.surface,
+            shadowColor: Theme.of(context).colorScheme.primary,
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.school, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        module.credits.toStringAsFixed(
-                          module.credits % 1 == 0 ? 0 : 1,
+                      SizedBox(
+                        height: gridItemWidth * 0.6,
+                        child: PercentageIndicatorWidget(
+                          percentage: module.mark,
+                          indicatorSize: Size.small,
                         ),
-                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        module.name,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(color: Colors.black),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.school, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            module.credits.toStringAsFixed(
+                              module.credits % 1 == 0 ? 0 : 1,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Positioned(top: 0, right: 0, child: _buildMenuButton()),
+              ],
             ),
-            Positioned(top: 0, right: 0, child: _buildMenuButton()),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
