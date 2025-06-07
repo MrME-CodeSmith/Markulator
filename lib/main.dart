@@ -14,6 +14,8 @@ import './data/services/module_service.dart';
 import './data/repositories/module_repository.dart';
 
 import './models/module_model.dart';
+import './models/degree_year_model.dart';
+import './models/degree_model.dart';
 import './views/overview_screen.dart';
 import './data/services/system_information_service.dart';
 import './data/repositories/settings_repository.dart';
@@ -26,6 +28,8 @@ const userModulesBox = "UserModules";
 const moduleContributorsBox = "ModuleContributors";
 const syncInfoBox = "SyncInfo";
 const settingsBox = "Settings";
+const degreesBox = "Degrees";
+const degreeYearsBox = "DegreeYears";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,11 +37,15 @@ void main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(MarkItemAdapter());
+  Hive.registerAdapter(DegreeYearAdapter());
+  Hive.registerAdapter(DegreeAdapter());
 
   await Hive.openBox(
     userModulesBox,
     compactionStrategy: (entries, deletedEntries) => deletedEntries > 20,
   );
+  await Hive.openBox(degreeYearsBox);
+  await Hive.openBox(degreesBox);
   await Hive.openBox(syncInfoBox);
   await Hive.openBox(settingsBox);
 

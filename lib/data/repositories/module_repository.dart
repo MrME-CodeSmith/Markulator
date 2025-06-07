@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../models/module_model.dart';
+import '../../models/degree_year_model.dart';
 import '../../main.dart';
 import '../services/module_service.dart';
 import '../../domain/calculate_contributor_weights.dart';
@@ -250,6 +251,7 @@ class ModuleRepository with ChangeNotifier {
     required double mark,
     required HiveList? contributors,
     required double credits,
+    DegreeYear? year,
   }) {
     MarkItem m = MarkItem(
       name: name,
@@ -265,6 +267,10 @@ class ModuleRepository with ChangeNotifier {
     _storedModules.add(m);
     m.save();
     _modules.putIfAbsent(m.key, () => m);
+    if (year != null) {
+      year.modules.add(m);
+      year.save();
+    }
     notifyListeners();
     _sync();
   }
