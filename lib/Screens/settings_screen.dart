@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-import '../Providers/cloud_provider.dart';
-import '../Providers/module_provider.dart';
+import '../data/services/auth_service.dart';
+import '../data/services/cloud_service.dart';
+import '../data/repositories/module_repository.dart';
 import '../Providers/settings_provider.dart';
 import 'dev_test_screen.dart';
 
@@ -14,8 +15,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cloud = Provider.of<CloudProvider>(context);
-    final modules = Provider.of<ModuleProvider>(context, listen: false);
+    final cloud = Provider.of<CloudService>(context);
+    final auth = Provider.of<AuthService>(context);
+    final modules = Provider.of<ModuleRepository>(context, listen: false);
     final settings = Provider.of<SettingsProvider>(context);
 
     if (Platform.isIOS) {
@@ -57,10 +59,10 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (cloud.user == null)
+              if (auth.user == null)
                 CupertinoButton.filled(
                   onPressed: () async {
-                    await cloud.signInWithGoogle();
+                    await auth.signInWithGoogle();
                     if (cloud.cloudEnabled) {
                       await modules.syncOnCloudEnabled(context);
                     }
@@ -75,14 +77,14 @@ class SettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+                      'Logged in as: ${auth.user!.email ?? auth.user!.uid}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 8),
                     CupertinoButton(
                       color: CupertinoColors.systemGrey,
                       onPressed: () async {
-                        await cloud.signOut();
+                        await auth.signOut();
                       },
                       child: Text(
                         'Logout',
@@ -144,10 +146,10 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          if (cloud.user == null)
+          if (auth.user == null)
             ElevatedButton(
               onPressed: () async {
-                await cloud.signInWithGoogle();
+                await auth.signInWithGoogle();
                 if (cloud.cloudEnabled) {
                   await modules.syncOnCloudEnabled(context);
                 }
@@ -162,13 +164,13 @@ class SettingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+                  'Logged in as: ${auth.user!.email ?? auth.user!.uid}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () async {
-                    await cloud.signOut();
+                    await auth.signOut();
                   },
                   child: Text(
                     'Logout',

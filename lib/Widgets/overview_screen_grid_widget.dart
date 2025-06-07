@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import './module_widget.dart';
 import 'overview_screen_no_modules_available_widget.dart';
 import 'padded_list_heading_widget.dart';
@@ -17,7 +17,9 @@ class OverviewScreenGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
+    final ModuleRepository moduleProvider = Provider.of<ModuleRepository>(
+      context,
+    );
     return (moduleProvider.modules.isNotEmpty)
         ? LayoutBuilder(
             builder: (ctx, constraints) {

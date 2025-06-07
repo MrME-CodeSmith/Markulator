@@ -4,7 +4,7 @@ import 'package:markulator/Screens/contributor_information_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/module_model.dart';
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import '../Providers/system_information_provider.dart';
 import './percentage_indicator_widget.dart';
 import 'contributor_creation_user_input_widget.dart';
@@ -19,14 +19,14 @@ class ContributorWidget extends StatefulWidget {
 }
 
 class _ContributorWidgetState extends State<ContributorWidget> {
-  late ModuleProvider provider;
+  late ModuleRepository provider;
   late SystemInformationProvider systemInformationProvider;
   late double screenHeight;
   bool shouldDelete = false;
 
   @override
   void didChangeDependencies() {
-    provider = Provider.of<ModuleProvider>(context, listen: false);
+    provider = Provider.of<ModuleRepository>(context, listen: false);
     systemInformationProvider = Provider.of<SystemInformationProvider>(context);
     screenHeight = systemInformationProvider.androidAvailableScreenHeight(
       context: context,

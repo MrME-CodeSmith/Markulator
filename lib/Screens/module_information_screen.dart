@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/module_model.dart';
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
@@ -21,13 +21,13 @@ class ModuleInformationScreen extends StatefulWidget {
 }
 
 class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
-  late ModuleProvider moduleProvider;
+  late ModuleRepository moduleProvider;
   late int moduleName;
 
   @override
   void didChangeDependencies() {
     moduleName = ModalRoute.of(context)!.settings.arguments as int;
-    moduleProvider = Provider.of<ModuleProvider>(context);
+    moduleProvider = Provider.of<ModuleRepository>(context);
     super.didChangeDependencies();
   }
 

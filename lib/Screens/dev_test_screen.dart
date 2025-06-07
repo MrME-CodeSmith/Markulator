@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/cloud_provider.dart';
-import '../Providers/module_provider.dart';
+import '../data/services/auth_service.dart';
+import '../data/services/cloud_service.dart';
+import '../data/repositories/module_repository.dart';
 
 class DevTestScreen extends StatefulWidget {
   static const routeName = '/devTest';
@@ -56,7 +57,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
     setState(() {});
   }
 
-  void _showModulesDialog(BuildContext context, ModuleProvider modules) {
+  void _showModulesDialog(BuildContext context, ModuleRepository modules) {
     final jsonStr = const JsonEncoder.withIndent(
       '  ',
     ).convert(modules.exportLocalModules());
@@ -86,10 +87,11 @@ class _DevTestScreenState extends State<DevTestScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final cloud = context.watch<CloudProvider>();
-    final modules = context.watch<ModuleProvider>();
+    final cloud = context.watch<CloudService>();
+    final auth = context.watch<AuthService>();
+    final modules = context.watch<ModuleRepository>();
 
-    if (cloud.user == null) {
+    if (auth.user == null) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -100,7 +102,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
         body: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await cloud.signInWithGoogle();
+              await auth.signInWithGoogle();
             },
             child: Text(
               'Sign in to use developer tools',
@@ -124,7 +126,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
             onPressed: () async {
-              await cloud.signOut();
+              await auth.signOut();
             },
           ),
         ],
@@ -135,7 +137,7 @@ class _DevTestScreenState extends State<DevTestScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Logged in as: ${cloud.user!.email ?? cloud.user!.uid}',
+              'Logged in as: ${auth.user!.email ?? auth.user!.uid}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 20),

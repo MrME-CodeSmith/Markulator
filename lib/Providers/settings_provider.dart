@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../main.dart';
-import 'cloud_provider.dart';
+import '../data/services/cloud_service.dart';
 
 class SettingsProvider with ChangeNotifier {
-  final CloudProvider cloudProvider;
+  final CloudService cloudService;
   late final Box _settingsBox;
   bool _darkMode = false;
 
-  SettingsProvider({required this.cloudProvider}) {
+  SettingsProvider({required this.cloudService}) {
     _settingsBox = Hive.box(settingsBox);
     _darkMode = _settingsBox.get('darkMode', defaultValue: false) as bool;
 
     // Listen for auth or cloud changes to fetch settings from the cloud
-    cloudProvider.addListener(_handleCloudChange);
+    cloudService.addListener(_handleCloudChange);
   }
 
   bool get darkMode => _darkMode;
@@ -23,12 +23,12 @@ class SettingsProvider with ChangeNotifier {
     _darkMode = value;
     await _settingsBox.put('darkMode', value);
     notifyListeners();
-    await cloudProvider.syncSettings({'darkMode': value});
+    await cloudService.syncSettings({'darkMode': value});
   }
 
   Future<void> _handleCloudChange() async {
-    if (cloudProvider.user != null && cloudProvider.cloudEnabled) {
-      final data = await cloudProvider.fetchSettings();
+    if (cloudService.user != null && cloudService.cloudEnabled) {
+      final data = await cloudService.fetchSettings();
       if (data != null && data['darkMode'] is bool) {
         final bool newValue = data['darkMode'] as bool;
         if (newValue != _darkMode) {

@@ -4,7 +4,7 @@ import 'package:markulator/Model/module_model.dart';
 import 'package:markulator/Widgets/weight_percentage_input.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/module_provider.dart';
+import '../data/repositories/module_repository.dart';
 import '../Providers/system_information_provider.dart';
 import './padded_list_heading_widget.dart';
 import 'percentage_input_widget.dart';
@@ -35,7 +35,7 @@ class _ContributorCreationUserInputWidgetState
   late final TextEditingController _percentageController;
   late final Boolean checked;
 
-  late ModuleProvider moduleProvider;
+  late ModuleRepository moduleProvider;
   late SystemInformationProvider systemInformationProvider;
 
   @override
@@ -65,7 +65,7 @@ class _ContributorCreationUserInputWidgetState
 
   @override
   void didChangeDependencies() {
-    moduleProvider = Provider.of<ModuleProvider>(context);
+    moduleProvider = Provider.of<ModuleRepository>(context);
     systemInformationProvider = Provider.of<SystemInformationProvider>(context);
     super.didChangeDependencies();
   }
