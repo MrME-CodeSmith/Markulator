@@ -74,21 +74,25 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                   ),
                 ),
                 Positioned(
-                  top: 8,
-                  left: 8,
+                  top: 12,
+                  left: 12,
                   child: Row(
                     children: [
                       const Icon(Icons.school, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        module.credits.toStringAsFixed(
-                            module.credits % 1 == 0 ? 0 : 1),
+                        module.credits
+                            .toStringAsFixed(module.credits % 1 == 0 ? 0 : 1),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
                 ),
-                Positioned(top: 0, right: 0, child: _buildMenuButton()),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: _buildMenuButton(),
+                ),
               ],
             ),
           ),
