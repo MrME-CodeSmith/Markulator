@@ -20,4 +20,32 @@ class DegreeYear extends HiveObject {
     required this.yearIndex,
     required this.modules,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'yearIndex': yearIndex,
+      'modules': modules.map((m) => (m as MarkItem).toMap()).toList(),
+    };
+  }
+
+  static DegreeYear fromMap(
+    Map<String, dynamic> map,
+    Box yearBox,
+    Box moduleBox,
+  ) {
+    final year = DegreeYear(
+      yearIndex: map['yearIndex'] as int,
+      modules: HiveList(moduleBox),
+    );
+    yearBox.add(year);
+    if (map['modules'] != null) {
+      for (final m in (map['modules'] as List)) {
+        year.modules.add(
+          MarkItem.fromMap(Map<String, dynamic>.from(m), moduleBox),
+        );
+      }
+    }
+    year.save();
+    return year;
+  }
 }
