@@ -68,6 +68,7 @@ void main() async {
   );
 
   await moduleRepository.setModuleService(moduleService);
+  await degreeRepository.setModuleService(moduleService);
 
   final SystemInformationService systemInfoProvider =
       SystemInformationService();

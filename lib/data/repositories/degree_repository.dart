@@ -6,18 +6,29 @@ import '../../models/degree_model.dart';
 import '../../models/degree_year_model.dart';
 import '../../models/module_model.dart';
 import 'module_repository.dart';
+import '../services/module_service.dart';
 
 /// Repository managing [Degree] and [DegreeYear] persistence.
 class DegreeRepository with ChangeNotifier {
   final ModuleRepository moduleRepository;
   late final Box _degreeBox;
   late final Box _yearBox;
+  late final Box _syncBox;
+  ModuleService? _service;
   final Map<dynamic, Degree> _degrees = {};
 
   DegreeRepository({required this.moduleRepository}) {
     _degreeBox = Hive.box(degreesBox);
     _yearBox = Hive.box(degreeYearsBox);
+    _syncBox = Hive.box(syncInfoBox);
     _degrees.addAll(_degreeBox.toMap().cast<dynamic, Degree>());
+  }
+
+  DateTime? get localLastUpdated =>
+      _syncBox.get('degreeLocalLastUpdated') as DateTime?;
+
+  void _updateLocalLastUpdated([DateTime? time]) {
+    _syncBox.put('degreeLocalLastUpdated', time ?? DateTime.now());
   }
 
   /// Map of stored degrees keyed by Hive id.
@@ -30,6 +41,7 @@ class DegreeRepository with ChangeNotifier {
     degree.save();
     _degrees[degree.key] = degree;
     notifyListeners();
+    _sync();
     return degree.key as int;
   }
 
@@ -43,6 +55,7 @@ class DegreeRepository with ChangeNotifier {
     _degrees.remove(degreeId);
     _degreeBox.delete(degreeId);
     notifyListeners();
+    _sync();
   }
 
   /// Add a year to the given degree and return its Hive key.
@@ -59,6 +72,7 @@ class DegreeRepository with ChangeNotifier {
     degree.years.add(year);
     degree.save();
     notifyListeners();
+    _sync();
     return year.key as int;
   }
 
@@ -81,6 +95,7 @@ class DegreeRepository with ChangeNotifier {
     degree.save();
     _yearBox.delete(yearId);
     notifyListeners();
+    _sync();
   }
 
   /// Add a module to a year within the given degree.
@@ -107,6 +122,7 @@ class DegreeRepository with ChangeNotifier {
       year: year,
     );
     notifyListeners();
+    _sync();
   }
 
   /// Average mark of all modules in a year.
@@ -157,5 +173,44 @@ class DegreeRepository with ChangeNotifier {
       credits += m.credits;
     }
     return credits > 0 ? weighted / credits : 0;
+  }
+
+  Future<void> setModuleService(ModuleService service) async {
+    _service = service;
+    final data = await service.fetchDegreesIfNewer();
+    if (data != null) {
+      await _loadFromRemote(data, service.cloudService.lastUpdated);
+      notifyListeners();
+    }
+  }
+
+  void _sync() {
+    _updateLocalLastUpdated();
+    if (_service != null) {
+      _service!.syncDegrees(
+        _degrees.values.map((d) => d.toMap()).toList(),
+      );
+    }
+  }
+
+  Future<void> _loadFromRemote(
+    List<Map<String, dynamic>> data, [
+    DateTime? remoteTime,
+  ]) async {
+    await moduleRepository.clearLocalModules();
+    _degrees.clear();
+    await _degreeBox.clear();
+    await _yearBox.clear();
+    final modulesBox = Hive.box(userModulesBox);
+    for (final degMap in data) {
+      final deg = Degree.fromMap(
+        Map<String, dynamic>.from(degMap),
+        _degreeBox,
+        _yearBox,
+        modulesBox,
+      );
+      _degrees[deg.key] = deg;
+    }
+    _updateLocalLastUpdated(remoteTime);
   }
 }

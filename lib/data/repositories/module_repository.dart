@@ -80,6 +80,15 @@ class ModuleRepository with ChangeNotifier {
     _updateLocalLastUpdated(remoteTime);
   }
 
+  @visibleForTesting
+  Future<void> replaceFromData(
+    List<Map<String, dynamic>> data, [
+    DateTime? remoteTime,
+  ]) async {
+    await _loadFromRemote(data, remoteTime);
+    notifyListeners();
+  }
+
   Future<void> clearLocalModules() async {
     _modules.clear();
     await _storedModules.clear();
