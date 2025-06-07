@@ -10,8 +10,7 @@ import 'padded_list_heading_widget.dart';
 class OverviewScreenGridWidget extends StatelessWidget {
   const OverviewScreenGridWidget({super.key});
 
-  int _getCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+  int _getCrossAxisCount(double width) {
     final count = (width / 160).floor();
     return (count > 0) ? count : 1;
   }
@@ -31,7 +30,7 @@ class OverviewScreenGridWidget extends StatelessWidget {
                       height: constraints.maxHeight * 0.9,
                       child: ReorderableGridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: _getCrossAxisCount(context),
+                          crossAxisCount: _getCrossAxisCount(constraints.maxWidth),
                           childAspectRatio: 0.8,
                           crossAxisSpacing: 14,
                           mainAxisSpacing: 20,
