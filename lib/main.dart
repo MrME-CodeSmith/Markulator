@@ -53,7 +53,8 @@ void main() async {
 
   await moduleRepository.setModuleService(moduleService);
 
-  final SystemInformationProvider systemInfoProvider = SystemInformationProvider();
+  final SystemInformationProvider systemInfoProvider =
+      SystemInformationProvider();
 
   runApp(
     Markulator(
@@ -107,8 +108,7 @@ class Markulator extends StatelessWidget {
           create: (_) => ModuleInfoViewModel(repository: moduleRepository),
         ),
         ChangeNotifierProvider<ContributorInfoViewModel>(
-          create: (_) =>
-              ContributorInfoViewModel(repository: moduleRepository),
+          create: (_) => ContributorInfoViewModel(repository: moduleRepository),
         ),
         ChangeNotifierProvider<SettingsViewModel>(
           create: (_) => SettingsViewModel(
@@ -132,7 +132,6 @@ class Markulator extends StatelessWidget {
               seedColor: Colors.blueGrey,
               brightness: Brightness.dark,
             ),
-            useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
