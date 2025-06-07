@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../data/services/cloud_service.dart';
 import '../data/services/auth_service.dart';
 import '../data/repositories/module_repository.dart';
-import '../Providers/settings_provider.dart';
+import '../data/repositories/settings_repository.dart';
 
 class SettingsViewModel with ChangeNotifier {
   final CloudService cloudService;
   final AuthService authService;
   final ModuleRepository modules;
-  final SettingsProvider settings;
+  final SettingsRepository settings;
 
   SettingsViewModel({
     required this.cloudService,

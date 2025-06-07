@@ -34,8 +34,10 @@ class CloudService with ChangeNotifier {
   Future<DateTime?> fetchRemoteLastUpdated() async {
     if (user == null) return null;
     try {
-      final doc =
-          await _firestore.collection('userModules').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
       return (doc.data()?['lastUpdated'] as Timestamp?)?.toDate();
     } catch (e) {
@@ -61,8 +63,10 @@ class CloudService with ChangeNotifier {
   Future<List<Map<String, dynamic>>?> fetchModulesIfNewer() async {
     if (!cloudEnabled) return null;
     try {
-      final doc =
-          await _firestore.collection('userModules').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
       final data = doc.data()!;
       final remoteTs = (data['lastUpdated'] as Timestamp?)?.toDate();
@@ -83,8 +87,10 @@ class CloudService with ChangeNotifier {
     if (!force && !cloudEnabled) return null;
     if (user == null) return null;
     try {
-      final doc =
-          await _firestore.collection('userModules').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userModules')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
       final data = doc.data()!;
       final remoteTs = (data['lastUpdated'] as Timestamp?)?.toDate();
@@ -113,8 +119,10 @@ class CloudService with ChangeNotifier {
   Future<Map<String, dynamic>?> fetchSettings() async {
     if (!cloudEnabled) return null;
     try {
-      final doc =
-          await _firestore.collection('userSettings').doc(user!.uid).get();
+      final doc = await _firestore
+          .collection('userSettings')
+          .doc(user!.uid)
+          .get();
       if (!doc.exists) return null;
       return doc.data();
     } catch (e) {

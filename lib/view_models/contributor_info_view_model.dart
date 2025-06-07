@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../Model/module_model.dart';
+import '../models/module_model.dart';
 import '../data/repositories/module_repository.dart';
 
 class ContributorInfoViewModel with ChangeNotifier {
