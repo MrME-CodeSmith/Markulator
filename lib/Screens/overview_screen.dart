@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Providers/system_information_provider.dart';
+import '../view_models/overview_view_model.dart';
 import '../Widgets/module_creation_user_input.dart';
 import '../Widgets/overview_screen_grid_widget.dart';
 import '../Widgets/overview_screen_average_carousel_widget.dart';
@@ -14,12 +14,14 @@ class OverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<SystemInformationProvider>(context).initialize(context);
+    final vm = Provider.of<OverviewViewModel>(context);
+    vm.initialize(context);
     final Widget body = LayoutBuilder(
       builder: (ctx, constraints) {
         final bool isWide = constraints.maxWidth > 600;
-        final double carouselHeight =
-            isWide ? constraints.maxHeight : constraints.maxHeight * 0.4;
+        final double carouselHeight = isWide
+            ? constraints.maxHeight
+            : constraints.maxHeight * 0.4;
         final carousel = OverviewScreenAverageCarouselWidget(
           height: carouselHeight,
           scrollDirection: isWide ? Axis.vertical : Axis.horizontal,

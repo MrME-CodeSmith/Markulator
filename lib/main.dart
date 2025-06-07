@@ -17,6 +17,10 @@ import './Model/module_model.dart';
 import './Screens/overview_screen.dart';
 import './Providers/system_information_provider.dart';
 import './Providers/settings_provider.dart';
+import './view_models/overview_view_model.dart';
+import './view_models/module_info_view_model.dart';
+import './view_models/contributor_info_view_model.dart';
+import './view_models/settings_view_model.dart';
 
 const userModulesBox = "UserModules";
 const moduleContributorsBox = "ModuleContributors";
@@ -82,6 +86,29 @@ class Markulator extends StatelessWidget {
         ChangeNotifierProvider<AuthService>(create: (_) => authService),
         ChangeNotifierProvider<SettingsProvider>(
           create: (_) => settingsProvider,
+        ),
+        ChangeNotifierProvider<OverviewViewModel>(
+          create: (context) => OverviewViewModel(
+            moduleRepository: context.read<ModuleRepository>(),
+            systemInfoProvider: context.read<SystemInformationProvider>(),
+          ),
+        ),
+        ChangeNotifierProvider<ModuleInfoViewModel>(
+          create: (context) =>
+              ModuleInfoViewModel(repository: context.read<ModuleRepository>()),
+        ),
+        ChangeNotifierProvider<ContributorInfoViewModel>(
+          create: (context) => ContributorInfoViewModel(
+            repository: context.read<ModuleRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider<SettingsViewModel>(
+          create: (context) => SettingsViewModel(
+            cloudService: context.read<CloudService>(),
+            authService: context.read<AuthService>(),
+            modules: context.read<ModuleRepository>(),
+            settings: context.read<SettingsProvider>(),
+          ),
         ),
       ],
       child: Consumer<SettingsProvider>(

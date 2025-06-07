@@ -4,36 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/module_model.dart';
-import '../data/repositories/module_repository.dart';
+import '../view_models/contributor_info_view_model.dart';
 import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
 import '../Widgets/padded_list_heading_widget.dart';
 import '../Widgets/contributor_creation_user_input_widget.dart';
 
-class ContributorInformationScreen extends StatefulWidget {
+class ContributorInformationScreen extends StatelessWidget {
   static const routeName = "/ContributorInformation";
   const ContributorInformationScreen({super.key});
 
   @override
-  State<ContributorInformationScreen> createState() =>
-      _ContributorInformationScreenState();
-}
-
-class _ContributorInformationScreenState
-    extends State<ContributorInformationScreen> {
-  late MarkItem parent;
-  late ModuleRepository moduleProvider;
-
-  @override
-  void didChangeDependencies() {
-    parent = ModalRoute.of(context)!.settings.arguments as MarkItem;
-    moduleProvider = Provider.of<ModuleRepository>(context);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<ContributorInfoViewModel>(context);
+    final MarkItem parentArg =
+        ModalRoute.of(context)!.settings.arguments as MarkItem;
+    vm.setParent(parentArg);
     final Widget content = LayoutBuilder(
       builder: (ctx, constraints) {
         final double chartHeight = constraints.maxHeight * 0.4;
@@ -43,37 +30,34 @@ class _ContributorInformationScreenState
               width: double.infinity,
               height: chartHeight,
               child: AveragePercentageWidget(
-                percentage: parent.mark,
-                heading: "${parent.name} average",
+                percentage: vm.parent!.mark,
+                heading: "${vm.parent!.name} average",
               ),
             ),
-            if (parent.contributors.isNotEmpty)
+            if (vm.parent!.contributors.isNotEmpty)
               const PaddedListHeadingWidget(headingName: "Contributors"),
-            if (parent.contributors.isNotEmpty)
+            if (vm.parent!.contributors.isNotEmpty)
               Expanded(
                 child: ReorderableListView.builder(
                   onReorder: (oldIndex, newIndex) {
-                    moduleProvider.reorderContributors(
-                      parent: parent,
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    );
+                    vm.reorderContributors(oldIndex, newIndex);
                   },
-                  itemCount: parent.contributors.length,
+                  itemCount: vm.parent!.contributors.length,
                   itemBuilder: (ctx, index) {
                     return Padding(
-                      key: ValueKey(parent.contributors[index].key),
-                      padding: (index < (parent.contributors.length - 1))
+                      key: ValueKey(vm.parent!.contributors[index].key),
+                      padding: (index < (vm.parent!.contributors.length - 1))
                           ? const EdgeInsets.only(bottom: 12)
                           : const EdgeInsets.all(0),
                       child: ContributorWidget(
-                        contributor: (parent.contributors[index] as MarkItem),
+                        contributor:
+                            (vm.parent!.contributors[index] as MarkItem),
                       ),
                     );
                   },
                 ),
               ),
-            if (parent.contributors.isEmpty)
+            if (vm.parent!.contributors.isEmpty)
               Expanded(
                 child: Center(
                   child: Text(
@@ -91,7 +75,7 @@ class _ContributorInformationScreenState
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle: Text(
-            parent.name,
+            vm.parent!.name,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           trailing: Row(
@@ -107,14 +91,14 @@ class _ContributorInformationScreenState
                         screenHeight: 0,
                         screenWidth: MediaQuery.of(ctx).size.width,
                         parent: null,
-                        toEdit: parent,
+                        toEdit: vm.parent!,
                       ),
                     ),
                   );
                 },
                 child: const Icon(CupertinoIcons.pencil),
               ),
-              AddContributorPopUpModal(parent: parent, toEdit: null),
+              AddContributorPopUpModal(parent: vm.parent!, toEdit: null),
             ],
           ),
         ),
@@ -125,7 +109,10 @@ class _ContributorInformationScreenState
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text(parent.name, style: Theme.of(context).textTheme.bodyMedium),
+        title: Text(
+          vm.parent!.name,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_rounded),
@@ -143,12 +130,12 @@ class _ContributorInformationScreenState
                   screenHeight: 0,
                   screenWidth: MediaQuery.of(ctx).size.width,
                   parent: null,
-                  toEdit: parent,
+                  toEdit: vm.parent!,
                 ),
               );
             },
           ),
-          AddContributorPopUpModal(parent: parent, toEdit: null),
+          AddContributorPopUpModal(parent: vm.parent!, toEdit: null),
         ],
       ),
       body: content,
