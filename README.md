@@ -20,3 +20,11 @@ samples, guidance on mobile development, and a full API reference.
 - Weighted average calculation with credits displayed in a carousel on the overview screen
 - Optional Google sign-in to sync modules with Firestore
 - Automatically pulls newer module data from Firestore when available
+
+## Testing
+
+Run all unit tests with:
+
+```bash
+flutter test
+```
