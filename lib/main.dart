@@ -41,21 +41,27 @@ void main() async {
   await Hive.openBox(syncInfoBox);
   await Hive.openBox(settingsBox);
 
-  final authService = AuthService();
-  final cloudService = CloudService();
-  final moduleService = ModuleService(cloudService: cloudService);
-  final ModuleRepository moduleProvider = ModuleRepository();
-  final SettingsProvider settingsProvider = SettingsProvider(
-    cloudService: cloudService,
-  );
-  await moduleProvider.setModuleService(moduleService);
+  // Instantiate repositories and services first so they can be passed to
+  // the view models below.
+  final ModuleRepository moduleRepository = ModuleRepository();
+  final AuthService authService = AuthService();
+  final CloudService cloudService = CloudService();
+
+  final ModuleService moduleService = ModuleService(cloudService: cloudService);
+  final SettingsProvider settingsProvider =
+      SettingsProvider(cloudService: cloudService);
+
+  await moduleRepository.setModuleService(moduleService);
+
+  final SystemInformationProvider systemInfoProvider = SystemInformationProvider();
 
   runApp(
     Markulator(
-      moduleProvider: moduleProvider,
+      moduleRepository: moduleRepository,
       cloudService: cloudService,
       authService: authService,
       settingsProvider: settingsProvider,
+      systemInfoProvider: systemInfoProvider,
     ),
   );
 }
@@ -63,51 +69,53 @@ void main() async {
 class Markulator extends StatelessWidget {
   const Markulator({
     super.key,
-    required this.moduleProvider,
+    required this.moduleRepository,
     required this.cloudService,
     required this.authService,
     required this.settingsProvider,
+    required this.systemInfoProvider,
   });
 
-  final ModuleRepository moduleProvider;
+  final ModuleRepository moduleRepository;
   final CloudService cloudService;
   final AuthService authService;
   final SettingsProvider settingsProvider;
+  final SystemInformationProvider systemInfoProvider;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SystemInformationProvider>(
-          create: (context) => SystemInformationProvider(),
+        ChangeNotifierProvider<SystemInformationProvider>.value(
+          value: systemInfoProvider,
         ),
-        ChangeNotifierProvider<ModuleRepository>(create: (_) => moduleProvider),
-        ChangeNotifierProvider<CloudService>(create: (_) => cloudService),
-        ChangeNotifierProvider<AuthService>(create: (_) => authService),
-        ChangeNotifierProvider<SettingsProvider>(
-          create: (_) => settingsProvider,
+        ChangeNotifierProvider<ModuleRepository>.value(
+          value: moduleRepository,
+        ),
+        ChangeNotifierProvider<CloudService>.value(value: cloudService),
+        ChangeNotifierProvider<AuthService>.value(value: authService),
+        ChangeNotifierProvider<SettingsProvider>.value(
+          value: settingsProvider,
         ),
         ChangeNotifierProvider<OverviewViewModel>(
-          create: (context) => OverviewViewModel(
-            moduleRepository: context.read<ModuleRepository>(),
-            systemInfoProvider: context.read<SystemInformationProvider>(),
+          create: (_) => OverviewViewModel(
+            moduleRepository: moduleRepository,
+            systemInfoProvider: systemInfoProvider,
           ),
         ),
         ChangeNotifierProvider<ModuleInfoViewModel>(
-          create: (context) =>
-              ModuleInfoViewModel(repository: context.read<ModuleRepository>()),
+          create: (_) => ModuleInfoViewModel(repository: moduleRepository),
         ),
         ChangeNotifierProvider<ContributorInfoViewModel>(
-          create: (context) => ContributorInfoViewModel(
-            repository: context.read<ModuleRepository>(),
-          ),
+          create: (_) =>
+              ContributorInfoViewModel(repository: moduleRepository),
         ),
         ChangeNotifierProvider<SettingsViewModel>(
-          create: (context) => SettingsViewModel(
-            cloudService: context.read<CloudService>(),
-            authService: context.read<AuthService>(),
-            modules: context.read<ModuleRepository>(),
-            settings: context.read<SettingsProvider>(),
+          create: (_) => SettingsViewModel(
+            cloudService: cloudService,
+            authService: authService,
+            modules: moduleRepository,
+            settings: settingsProvider,
           ),
         ),
       ],
