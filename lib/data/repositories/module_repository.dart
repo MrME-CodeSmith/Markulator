@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,14 +6,19 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../Model/module_model.dart';
 import '../../main.dart';
 import '../services/module_service.dart';
+import '../../domain/calculate_contributor_weights.dart';
 
 class ModuleRepository with ChangeNotifier {
   late final dynamic _storedModules;
   late final Map<dynamic, dynamic> _modules;
   late final Box _syncBox;
   ModuleService? _service;
+  final CalculateContributorWeights _calculateContributorWeights;
 
-  ModuleRepository() {
+  ModuleRepository({CalculateContributorWeights? calculateContributorWeights})
+      : _calculateContributorWeights =
+            calculateContributorWeights ??
+            const CalculateContributorWeights() {
     _storedModules = Hive.box(userModulesBox);
     _syncBox = Hive.box(syncInfoBox);
     _modules = _storedModules.toMap();
@@ -217,7 +221,7 @@ class ModuleRepository with ChangeNotifier {
     _storedModules.add(toAdd);
     toAdd.save();
     parent.contributors.add(toAdd);
-    calculateWeights(parent);
+    _calculateContributorWeights(parent);
     notifyListeners();
     parent.save();
     _sync();
@@ -236,42 +240,12 @@ class ModuleRepository with ChangeNotifier {
     (parent.contributors[index] as MarkItem).mark = mark /= 100;
     (parent.contributors[index] as MarkItem).autoWeight = autoWeight;
     (parent.contributors[index] as MarkItem).weight = weight /= 100;
-    calculateWeights(parent);
+    _calculateContributorWeights(parent);
     notifyListeners();
     parent.contributors[index].save();
     _sync();
   }
 
-  void calculateWeights(MarkItem parent) {
-    List<MarkItem> weightedList = [], unweightedList = [];
-    for (var i = 0; i < parent.contributors.length; i++) {
-      MarkItem currentContributor = (parent.contributors[i] as MarkItem);
-      if (!currentContributor.autoWeight) {
-        weightedList.add(currentContributor);
-      } else {
-        unweightedList.add(currentContributor);
-      }
-    }
-    parent.mark = 0;
-    double totalWeight = 0;
-    for (var i = 0; i < weightedList.length; i++) {
-      MarkItem c = weightedList.elementAt(i);
-      totalWeight += (c.weight * 100);
-      parent.mark += (c.mark * 100) * c.weight;
-    }
-    double remainingWeight = (100 - totalWeight) / unweightedList.length;
-    for (var i = 0; i < unweightedList.length; i++) {
-      MarkItem c = unweightedList.elementAt(i);
-      c.weight = max((remainingWeight / 100), 0);
-      c.save();
-      parent.mark += (c.mark * 100) * c.weight;
-    }
-    parent.mark /= 100;
-    parent.save();
-    if (parent.parent != null) {
-      calculateWeights(parent.parent!);
-    }
-  }
 
   void addModule({
     required String name,
@@ -301,7 +275,7 @@ class ModuleRepository with ChangeNotifier {
     required MarkItem contributor,
   }) {
     _storedModules.delete(contributor.key);
-    calculateWeights(parent);
+    _calculateContributorWeights(parent);
     notifyListeners();
     _sync();
   }
