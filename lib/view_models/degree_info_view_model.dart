@@ -26,9 +26,9 @@ class DegreeInfoViewModel with ChangeNotifier {
 
   List<MarkItem> modulesForYear(int yearId) {
     final year = degree?.years.cast<DegreeYear?>().firstWhere(
-          (y) => y?.key == yearId,
-          orElse: () => null,
-        );
+      (y) => y?.key == yearId,
+      orElse: () => null,
+    );
     return year?.modules.cast<MarkItem>().toList(growable: false) ?? const [];
   }
 
@@ -37,9 +37,14 @@ class DegreeInfoViewModel with ChangeNotifier {
   double weightedAverageForYear(int yearId) =>
       repository.weightedAverageForYear(yearId);
 
+  double creditsForYear(int yearId) => repository.creditsForYear(yearId);
+
   double get averageForDegree =>
       (degreeId != null) ? repository.averageForDegree(degreeId!) : 0;
 
   double get weightedAverageForDegree =>
       (degreeId != null) ? repository.weightedAverageForDegree(degreeId!) : 0;
+
+  double get creditsForDegree =>
+      (degreeId != null) ? repository.creditsForDegree(degreeId!) : 0;
 }

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/module_model.dart';
 import '../view_models/module_info_view_model.dart';
 import 'widgets/add_contributor_pop_up_modal_widget.dart';
-import 'widgets/average_percentage_widget.dart';
+import 'widgets/statistics_carousel_widget.dart';
 import 'widgets/contributor_widget.dart';
 import 'widgets/padded_list_heading_widget.dart';
 import 'widgets/module_creation_user_input.dart';
@@ -28,9 +28,22 @@ class ModuleInformationScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: chartHeight,
-              child: AveragePercentageWidget(
-                percentage: vm.average,
-                heading: "${vm.module!.name} average",
+              child: StatisticsCarousel(
+                height: chartHeight,
+                items: [
+                  StatisticItem(
+                    heading: "${vm.module!.name} average",
+                    value: vm.average,
+                    isPercentage: true,
+                  ),
+                  ...vm.module!.contributors.cast<MarkItem>().map(
+                    (c) => StatisticItem(
+                      heading: c.name,
+                      value: c.mark,
+                      isPercentage: true,
+                    ),
+                  ),
+                ],
               ),
             ),
             if (vm.module!.contributors.isNotEmpty)

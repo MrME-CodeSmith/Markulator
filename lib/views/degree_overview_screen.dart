@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../data/repositories/degree_repository.dart';
 import 'degree_information_screen.dart';
-import 'widgets/average_percentage_widget.dart';
+import 'widgets/statistics_carousel_widget.dart';
 
 class DegreeOverviewScreen extends StatelessWidget {
   static const routeName = '/degrees';
@@ -27,14 +27,28 @@ class DegreeOverviewScreen extends StatelessWidget {
             width: double.infinity,
             height: carouselHeight,
             child: PageView(
-              children: degrees
-                  .map(
-                    (e) => AveragePercentageWidget(
-                      percentage: repo.weightedAverageForDegree(e.key as int),
+              children: degrees.map((e) {
+                final id = e.key as int;
+                return StatisticsCarousel(
+                  height: carouselHeight,
+                  items: [
+                    StatisticItem(
                       heading: '${e.value.name} average',
+                      value: repo.averageForDegree(id),
+                      isPercentage: true,
                     ),
-                  )
-                  .toList(),
+                    StatisticItem(
+                      heading: 'Weighted average',
+                      value: repo.weightedAverageForDegree(id),
+                      isPercentage: true,
+                    ),
+                    StatisticItem(
+                      heading: 'Credits',
+                      value: repo.creditsForDegree(id),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
           );
 

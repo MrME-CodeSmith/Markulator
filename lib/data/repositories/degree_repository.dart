@@ -81,9 +81,9 @@ class DegreeRepository with ChangeNotifier {
     final degree = _degrees[degreeId];
     if (degree == null) return;
     final year = degree.years.cast<DegreeYear?>().firstWhere(
-          (y) => y?.key == yearId,
-          orElse: () => null,
-        );
+      (y) => y?.key == yearId,
+      orElse: () => null,
+    );
     if (year == null) return;
 
     // remove modules belonging to year
@@ -110,9 +110,9 @@ class DegreeRepository with ChangeNotifier {
     final degree = _degrees[degreeId];
     if (degree == null) throw ArgumentError('Degree not found');
     final year = degree.years.cast<DegreeYear?>().firstWhere(
-          (y) => y?.key == yearId,
-          orElse: () => null,
-        );
+      (y) => y?.key == yearId,
+      orElse: () => null,
+    );
     if (year == null) throw ArgumentError('Year not found');
     moduleRepository.addModule(
       name: name,
@@ -175,6 +175,30 @@ class DegreeRepository with ChangeNotifier {
     return credits > 0 ? weighted / credits : 0;
   }
 
+  /// Sum of credits for modules in the given year.
+  double creditsForYear(int yearId) {
+    final year = _yearBox.get(yearId);
+    if (year == null) return 0;
+    double credits = 0;
+    for (final m in year.modules.cast<MarkItem>()) {
+      credits += m.credits;
+    }
+    return credits;
+  }
+
+  /// Total credits across all years of a degree.
+  double creditsForDegree(int degreeId) {
+    final degree = _degrees[degreeId];
+    if (degree == null) return 0;
+    double credits = 0;
+    for (final y in degree.years.cast<DegreeYear>()) {
+      for (final m in y.modules.cast<MarkItem>()) {
+        credits += m.credits;
+      }
+    }
+    return credits;
+  }
+
   Future<void> setModuleService(ModuleService service) async {
     _service = service;
     final data = await service.fetchDegreesIfNewer();
@@ -187,9 +211,7 @@ class DegreeRepository with ChangeNotifier {
   void _sync() {
     _updateLocalLastUpdated();
     if (_service != null) {
-      _service!.syncDegrees(
-        _degrees.values.map((d) => d.toMap()).toList(),
-      );
+      _service!.syncDegrees(_degrees.values.map((d) => d.toMap()).toList());
     }
   }
 

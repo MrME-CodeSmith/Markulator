@@ -15,4 +15,7 @@ class DegreeOverviewViewModel with ChangeNotifier {
 
   double weightedAverageForDegree(int degreeId) =>
       repository.weightedAverageForDegree(degreeId);
+
+  double creditsForDegree(int degreeId) =>
+      repository.creditsForDegree(degreeId);
 }
