@@ -38,6 +38,8 @@ class _OverviewScreenAverageCarouselWidgetState
   @override
   Widget build(BuildContext context) {
     final ModuleProvider moduleProvider = Provider.of<ModuleProvider>(context);
+    final bool showBoth =
+        widget.scrollDirection == Axis.vertical && widget.height > 350;
     final List<Widget> indicators = List.generate(
       2,
       (i) => Container(
@@ -84,6 +86,29 @@ class _OverviewScreenAverageCarouselWidgetState
             mainAxisAlignment: MainAxisAlignment.center,
             children: indicators,
           );
+
+    if (showBoth) {
+      return SizedBox(
+        width: double.infinity,
+        height: widget.height,
+        child: Column(
+          children: [
+            Expanded(
+              child: AveragePercentageWidget(
+                percentage: moduleProvider.averageModulesMark,
+                heading: 'Modules average',
+              ),
+            ),
+            Expanded(
+              child: AveragePercentageWidget(
+                percentage: moduleProvider.weightedAverageModulesMark,
+                heading: 'Weighted average',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return SizedBox(
       width: double.infinity,
