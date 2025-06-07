@@ -6,6 +6,7 @@ sync your data with Firebase. The code follows the **MVVM**
 (Model&ndash;View&ndash;ViewModel) pattern: views obtain data from view models
 while repositories and services handle persistence and network access.
 
+[![Codemagic build status](https://api.codemagic.io/apps/68447451fe351b264e203d3f/68447451fe351b264e203d3e/status_badge.svg)](https://codemagic.io/app/68447451fe351b264e203d3f/68447451fe351b264e203d3e/latest_build)
 ## Getting Started
 
 This project is a starting point for a Flutter application.
