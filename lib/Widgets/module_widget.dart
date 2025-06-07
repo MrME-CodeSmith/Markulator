@@ -71,19 +71,20 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                             .bodyLarge!
                             .copyWith(color: Colors.black),
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.school, size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            module.credits.toStringAsFixed(
-                              module.credits % 1 == 0 ? 0 : 1,
-                            ),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.school, size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        module.credits.toStringAsFixed(
+                            module.credits % 1 == 0 ? 0 : 1),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
