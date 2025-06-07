@@ -4,35 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/module_model.dart';
-import '../data/repositories/module_repository.dart';
+import '../view_models/module_info_view_model.dart';
 import '../Widgets/add_contributor_pop_up_modal_widget.dart';
 import '../Widgets/average_percentage_widget.dart';
 import '../Widgets/contributor_widget.dart';
 import '../Widgets/padded_list_heading_widget.dart';
 import '../Widgets/module_creation_user_input.dart';
 
-class ModuleInformationScreen extends StatefulWidget {
+class ModuleInformationScreen extends StatelessWidget {
   static const routeName = "/moduleInformation";
   const ModuleInformationScreen({super.key});
 
   @override
-  State<ModuleInformationScreen> createState() =>
-      _ModuleInformationScreenState();
-}
-
-class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
-  late ModuleRepository moduleProvider;
-  late int moduleName;
-
-  @override
-  void didChangeDependencies() {
-    moduleName = ModalRoute.of(context)!.settings.arguments as int;
-    moduleProvider = Provider.of<ModuleRepository>(context);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<ModuleInfoViewModel>(context);
+    final int moduleName = ModalRoute.of(context)!.settings.arguments as int;
+    vm.setModule(moduleName);
     final Widget content = LayoutBuilder(
       builder: (ctx, constraints) {
         final double chartHeight = constraints.maxHeight * 0.4;
@@ -42,40 +29,32 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
               width: double.infinity,
               height: chartHeight,
               child: AveragePercentageWidget(
-                percentage: moduleProvider.averageMark(moduleName),
-                heading: "${moduleProvider.modules[moduleName]!.name} average",
+                percentage: vm.average,
+                heading: "${vm.module!.name} average",
               ),
             ),
-            if (moduleProvider.modules[moduleName]!.contributors.isNotEmpty)
+            if (vm.module!.contributors.isNotEmpty)
               const PaddedListHeadingWidget(headingName: "Contributors"),
-            if (moduleProvider.modules[moduleName]!.contributors.isNotEmpty)
+            if (vm.module!.contributors.isNotEmpty)
               Expanded(
                 child: ReorderableListView.builder(
                   onReorder: (oldIndex, newIndex) {
-                    moduleProvider.reorderContributors(
-                      parent: moduleProvider.modules[moduleName]!,
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    );
+                    vm.reorderContributors(oldIndex, newIndex);
                   },
-                  itemCount:
-                      moduleProvider.modules[moduleName]!.contributors.length,
+                  itemCount: vm.module!.contributors.length,
                   itemBuilder: (ctx, index) {
                     return Padding(
-                      key: ValueKey(
-                        moduleProvider
-                            .modules[moduleName]!.contributors[index].key,
-                      ),
+                      key: ValueKey(vm.module!.contributors[index].key),
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: ContributorWidget(
-                        contributor: (moduleProvider.modules[moduleName]!
-                            .contributors[index]) as MarkItem,
+                        contributor:
+                            (vm.module!.contributors[index]) as MarkItem,
                       ),
                     );
                   },
                 ),
               ),
-            if (moduleProvider.modules[moduleName]!.contributors.isEmpty)
+            if (vm.module!.contributors.isEmpty)
               Expanded(
                 child: Center(
                   child: Text(
@@ -93,7 +72,7 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
       return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle: Text(
-            moduleProvider.modules[moduleName]!.name,
+            vm.module!.name,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           trailing: Row(
@@ -105,18 +84,13 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
                   showCupertinoModalPopup(
                     context: context,
                     builder: (ctx) => Material(
-                      child: ModuleCreationUserInputWidget(
-                        toEdit: moduleProvider.modules[moduleName]!,
-                      ),
+                      child: ModuleCreationUserInputWidget(toEdit: vm.module!),
                     ),
                   );
                 },
                 child: const Icon(CupertinoIcons.pencil),
               ),
-              AddContributorPopUpModal(
-                parent: moduleProvider.modules[moduleName]!,
-                toEdit: null,
-              ),
+              AddContributorPopUpModal(parent: vm.module!, toEdit: null),
             ],
           ),
         ),
@@ -128,7 +102,7 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Text(
-          moduleProvider.modules[moduleName]!.name,
+          vm.module!.name,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
@@ -144,16 +118,12 @@ class _ModuleInformationScreenState extends State<ModuleInformationScreen> {
                     top: Radius.circular(14),
                   ),
                 ),
-                builder: (ctx) => ModuleCreationUserInputWidget(
-                  toEdit: moduleProvider.modules[moduleName]!,
-                ),
+                builder: (ctx) =>
+                    ModuleCreationUserInputWidget(toEdit: vm.module!),
               );
             },
           ),
-          AddContributorPopUpModal(
-            parent: moduleProvider.modules[moduleName]!,
-            toEdit: null,
-          ),
+          AddContributorPopUpModal(parent: vm.module!, toEdit: null),
         ],
       ),
       body: content,
