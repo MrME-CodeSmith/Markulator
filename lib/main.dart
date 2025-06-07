@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:markulator/views/contributor_information_screen.dart';
 import 'package:markulator/views/module_information_screen.dart';
+import 'package:markulator/views/degree_overview_screen.dart';
+import 'package:markulator/views/degree_information_screen.dart';
 import 'package:markulator/views/settings_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'views/dev_test_screen.dart';
@@ -12,11 +14,11 @@ import './data/services/auth_service.dart';
 import './data/services/cloud_service.dart';
 import './data/services/module_service.dart';
 import './data/repositories/module_repository.dart';
+import './data/repositories/degree_repository.dart';
 
 import './models/module_model.dart';
 import './models/degree_year_model.dart';
 import './models/degree_model.dart';
-import './views/overview_screen.dart';
 import './data/services/system_information_service.dart';
 import './data/repositories/settings_repository.dart';
 import './view_models/overview_view_model.dart';
@@ -52,6 +54,9 @@ void main() async {
   // Instantiate repositories and services first so they can be passed to
   // the view models below.
   final ModuleRepository moduleRepository = ModuleRepository();
+  final DegreeRepository degreeRepository = DegreeRepository(
+    moduleRepository: moduleRepository,
+  );
   final AuthService authService = AuthService();
   final CloudService cloudService = CloudService();
 
@@ -68,6 +73,7 @@ void main() async {
   runApp(
     Markulator(
       moduleRepository: moduleRepository,
+      degreeRepository: degreeRepository,
       cloudService: cloudService,
       authService: authService,
       settingsRepository: settingsRepository,
@@ -80,6 +86,7 @@ class Markulator extends StatelessWidget {
   const Markulator({
     super.key,
     required this.moduleRepository,
+    required this.degreeRepository,
     required this.cloudService,
     required this.authService,
     required this.settingsRepository,
@@ -87,6 +94,7 @@ class Markulator extends StatelessWidget {
   });
 
   final ModuleRepository moduleRepository;
+  final DegreeRepository degreeRepository;
   final CloudService cloudService;
   final AuthService authService;
   final SettingsRepository settingsRepository;
@@ -100,6 +108,7 @@ class Markulator extends StatelessWidget {
           value: systemInfoProvider,
         ),
         ChangeNotifierProvider<ModuleRepository>.value(value: moduleRepository),
+        ChangeNotifierProvider<DegreeRepository>.value(value: degreeRepository),
         ChangeNotifierProvider<CloudService>.value(value: cloudService),
         ChangeNotifierProvider<AuthService>.value(value: authService),
         ChangeNotifierProvider<SettingsRepository>.value(
@@ -142,8 +151,12 @@ class Markulator extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-          home: const OverviewScreen(),
+          home: const DegreeOverviewScreen(),
           routes: {
+            DegreeOverviewScreen.routeName: ((context) =>
+                const DegreeOverviewScreen()),
+            DegreeInformationScreen.routeName: ((context) =>
+                const DegreeInformationScreen()),
             ModuleInformationScreen.routeName: ((context) =>
                 const ModuleInformationScreen()),
             ContributorInformationScreen.routeName: ((context) =>

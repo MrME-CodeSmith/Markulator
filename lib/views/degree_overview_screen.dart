@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../data/repositories/degree_repository.dart';
+import 'degree_information_screen.dart';
+import 'widgets/average_percentage_widget.dart';
+
+class DegreeOverviewScreen extends StatelessWidget {
+  static const routeName = '/degrees';
+  const DegreeOverviewScreen({super.key});
+
+  int _getCrossAxisCount(double width) {
+    final count = (width / 160).floor();
+    return count > 0 ? count : 1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final repo = context.watch<DegreeRepository>();
+    final degrees = repo.degrees.entries.toList();
+
+    final carouselHeight = MediaQuery.of(context).size.height * 0.3;
+
+    final carousel = degrees.isEmpty
+        ? const SizedBox.shrink()
+        : SizedBox(
+            width: double.infinity,
+            height: carouselHeight,
+            child: PageView(
+              children: degrees
+                  .map(
+                    (e) => AveragePercentageWidget(
+                      percentage: repo.weightedAverageForDegree(e.key as int),
+                      heading: '${e.value.name} average',
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+
+    final grid = degrees.isEmpty
+        ? Center(
+            child: Text(
+              'No degrees available.',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          )
+        : GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _getCrossAxisCount(
+                MediaQuery.of(context).size.width,
+              ),
+              childAspectRatio: 1,
+              crossAxisSpacing: 14,
+              mainAxisSpacing: 14,
+            ),
+            itemCount: degrees.length,
+            itemBuilder: (ctx, i) {
+              final entry = degrees[i];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    DegreeInformationScreen.routeName,
+                    arguments: entry.key,
+                  );
+                },
+                child: Card(
+                  elevation: 2,
+                  child: Center(
+                    child: Text(
+                      entry.value.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Degrees', style: Theme.of(context).textTheme.bodyMedium),
+      ),
+      body: Column(
+        children: [
+          if (degrees.isNotEmpty) carousel,
+          Expanded(
+            child: Padding(padding: const EdgeInsets.all(8), child: grid),
+          ),
+        ],
+      ),
+    );
+  }
+}
