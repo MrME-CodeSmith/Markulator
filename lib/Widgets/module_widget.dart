@@ -42,7 +42,7 @@ class _ModuleWidgetState extends State<ModuleWidget> {
           child: Card(
             color: Theme.of(context).colorScheme.surface,
             shadowColor: Theme.of(context).colorScheme.primary,
-            elevation: 1,
+            elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
@@ -66,10 +66,9 @@ class _ModuleWidgetState extends State<ModuleWidget> {
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: Colors.black),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge!.copyWith(color: Colors.black),
                       ),
                       const SizedBox(height: 4),
                       Row(

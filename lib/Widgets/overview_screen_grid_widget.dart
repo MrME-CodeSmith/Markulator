@@ -24,37 +24,26 @@ class OverviewScreenGridWidget extends StatelessWidget {
               return Column(
                 children: [
                   const PaddedListHeadingWidget(headingName: "Modules"),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                    child: SizedBox(
-                      height: constraints.maxHeight * 0.9,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       child: ReorderableGridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: _getCrossAxisCount(constraints.maxWidth),
+                          crossAxisCount: _getCrossAxisCount(
+                            constraints.maxWidth,
+                          ),
                           childAspectRatio: 0.8,
                           crossAxisSpacing: 14,
                           mainAxisSpacing: 20,
                         ),
-                        itemBuilder: (_, i) => Container(
+                        itemBuilder: (_, i) => ModuleWidget(
                           key: ValueKey(
                             moduleProvider.modules.keys.elementAt(i),
                           ),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.blueGrey[300]!,
-                                blurRadius: 2.5,
-                                offset: const Offset(5.0, 7.0),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ModuleWidget(
-                            id: moduleProvider.modules.entries
-                                .elementAt(i)
-                                .value
-                                .key,
-                          ),
+                          id: moduleProvider.modules.entries
+                              .elementAt(i)
+                              .value
+                              .key,
                         ),
                         itemCount: moduleProvider.modules.entries.length,
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
