@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../Model/module_model.dart';
+import '../models/module_model.dart';
 
 /// Helper use-case to recalculate contributor weights for a [MarkItem].
 ///

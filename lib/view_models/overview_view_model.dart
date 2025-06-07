@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-import '../Providers/system_information_provider.dart';
+import '../data/services/system_information_service.dart';
 import '../data/repositories/module_repository.dart';
-import '../Model/module_model.dart';
+import '../models/module_model.dart';
 
 class OverviewViewModel with ChangeNotifier {
   final ModuleRepository moduleRepository;
-  final SystemInformationProvider systemInfoProvider;
+  final SystemInformationService systemInfoProvider;
 
   OverviewViewModel({
     required this.moduleRepository,

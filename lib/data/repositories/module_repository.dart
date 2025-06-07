@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../Model/module_model.dart';
+import '../../models/module_model.dart';
 import '../../main.dart';
 import '../services/module_service.dart';
 import '../../domain/calculate_contributor_weights.dart';
@@ -16,9 +16,8 @@ class ModuleRepository with ChangeNotifier {
   final CalculateContributorWeights _calculateContributorWeights;
 
   ModuleRepository({CalculateContributorWeights? calculateContributorWeights})
-      : _calculateContributorWeights =
-            calculateContributorWeights ??
-            const CalculateContributorWeights() {
+    : _calculateContributorWeights =
+          calculateContributorWeights ?? const CalculateContributorWeights() {
     _storedModules = Hive.box(userModulesBox);
     _syncBox = Hive.box(syncInfoBox);
     _modules = _storedModules.toMap();
@@ -246,7 +245,6 @@ class ModuleRepository with ChangeNotifier {
     _sync();
   }
 
-
   void addModule({
     required String name,
     required double mark,
@@ -256,8 +254,9 @@ class ModuleRepository with ChangeNotifier {
     MarkItem m = MarkItem(
       name: name,
       mark: mark /= 100,
-      contributors:
-          (contributors != null) ? contributors : HiveList(_storedModules),
+      contributors: (contributors != null)
+          ? contributors
+          : HiveList(_storedModules),
       autoWeight: true,
       parent: null,
       weight: 0,

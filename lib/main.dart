@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:markulator/Screens/contributor_information_screen.dart';
-import 'package:markulator/Screens/module_information_screen.dart';
-import 'package:markulator/Screens/settings_screen.dart';
+import 'package:markulator/views/contributor_information_screen.dart';
+import 'package:markulator/views/module_information_screen.dart';
+import 'package:markulator/views/settings_screen.dart';
 import 'package:flutter/foundation.dart';
-import 'Screens/dev_test_screen.dart';
+import 'views/dev_test_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,10 +13,10 @@ import './data/services/cloud_service.dart';
 import './data/services/module_service.dart';
 import './data/repositories/module_repository.dart';
 
-import './Model/module_model.dart';
-import './Screens/overview_screen.dart';
-import './Providers/system_information_provider.dart';
-import './Providers/settings_provider.dart';
+import './models/module_model.dart';
+import './views/overview_screen.dart';
+import './data/services/system_information_service.dart';
+import './data/repositories/settings_repository.dart';
 import './view_models/overview_view_model.dart';
 import './view_models/module_info_view_model.dart';
 import './view_models/contributor_info_view_model.dart';
@@ -48,20 +48,21 @@ void main() async {
   final CloudService cloudService = CloudService();
 
   final ModuleService moduleService = ModuleService(cloudService: cloudService);
-  final SettingsProvider settingsProvider =
-      SettingsProvider(cloudService: cloudService);
+  final SettingsRepository settingsRepository = SettingsRepository(
+    cloudService: cloudService,
+  );
 
   await moduleRepository.setModuleService(moduleService);
 
-  final SystemInformationProvider systemInfoProvider =
-      SystemInformationProvider();
+  final SystemInformationService systemInfoProvider =
+      SystemInformationService();
 
   runApp(
     Markulator(
       moduleRepository: moduleRepository,
       cloudService: cloudService,
       authService: authService,
-      settingsProvider: settingsProvider,
+      settingsRepository: settingsRepository,
       systemInfoProvider: systemInfoProvider,
     ),
   );
@@ -73,30 +74,28 @@ class Markulator extends StatelessWidget {
     required this.moduleRepository,
     required this.cloudService,
     required this.authService,
-    required this.settingsProvider,
+    required this.settingsRepository,
     required this.systemInfoProvider,
   });
 
   final ModuleRepository moduleRepository;
   final CloudService cloudService;
   final AuthService authService;
-  final SettingsProvider settingsProvider;
-  final SystemInformationProvider systemInfoProvider;
+  final SettingsRepository settingsRepository;
+  final SystemInformationService systemInfoProvider;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SystemInformationProvider>.value(
+        ChangeNotifierProvider<SystemInformationService>.value(
           value: systemInfoProvider,
         ),
-        ChangeNotifierProvider<ModuleRepository>.value(
-          value: moduleRepository,
-        ),
+        ChangeNotifierProvider<ModuleRepository>.value(value: moduleRepository),
         ChangeNotifierProvider<CloudService>.value(value: cloudService),
         ChangeNotifierProvider<AuthService>.value(value: authService),
-        ChangeNotifierProvider<SettingsProvider>.value(
-          value: settingsProvider,
+        ChangeNotifierProvider<SettingsRepository>.value(
+          value: settingsRepository,
         ),
         ChangeNotifierProvider<OverviewViewModel>(
           create: (_) => OverviewViewModel(
@@ -115,11 +114,11 @@ class Markulator extends StatelessWidget {
             cloudService: cloudService,
             authService: authService,
             modules: moduleRepository,
-            settings: settingsProvider,
+            settings: settingsRepository,
           ),
         ),
       ],
-      child: Consumer<SettingsProvider>(
+      child: Consumer<SettingsRepository>(
         builder: (context, settings, _) => MaterialApp(
           title: 'Markulator',
           theme: ThemeData(
