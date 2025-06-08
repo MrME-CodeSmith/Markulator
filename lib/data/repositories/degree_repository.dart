@@ -45,6 +45,16 @@ class DegreeRepository with ChangeNotifier {
     return degree.key as int;
   }
 
+  /// Rename the specified degree.
+  void renameDegree(int degreeId, String newName) {
+    final degree = _degrees[degreeId];
+    if (degree == null) return;
+    degree.name = newName;
+    degree.save();
+    notifyListeners();
+    _sync();
+  }
+
   /// Remove a degree and all of its years and modules.
   void removeDegree(int degreeId) {
     final degree = _degrees[degreeId];

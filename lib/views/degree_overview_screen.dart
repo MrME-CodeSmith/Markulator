@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../data/repositories/degree_repository.dart';
 import 'degree_information_screen.dart';
 import 'widgets/statistics_carousel_widget.dart';
+import 'widgets/degree_creation_dialog.dart';
 
 class DegreeOverviewScreen extends StatelessWidget {
   static const routeName = '/degrees';
@@ -104,6 +105,23 @@ class DegreeOverviewScreen extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (ctx) => DegreeCreationDialog(
+              title: 'Create Degree',
+              confirmText: 'Add',
+              onSubmit: repo.addDegree,
+            ),
+          );
+        },
+        icon: const Icon(Icons.add),
+        label: Text('Add Degree',
+            style: Theme.of(context).textTheme.bodyMedium),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
     );
   }
 }

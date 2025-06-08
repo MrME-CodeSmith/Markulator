@@ -3,18 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../data/repositories/degree_repository.dart';
 import '../models/degree_year_model.dart';
-import '../models/module_model.dart';
 import 'widgets/statistics_carousel_widget.dart';
-import 'widgets/module_widget.dart';
+import 'widgets/degree_creation_dialog.dart';
+import 'widgets/degree_year_widget.dart';
 
 class DegreeInformationScreen extends StatelessWidget {
   static const routeName = '/degreeInformation';
   const DegreeInformationScreen({super.key});
-
-  int _getCrossAxisCount(double width) {
-    final count = (width / 160).floor();
-    return count > 0 ? count : 1;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,69 +17,90 @@ class DegreeInformationScreen extends StatelessWidget {
     final int degreeId = ModalRoute.of(context)!.settings.arguments as int;
     final degree = repo.degrees[degreeId]!;
 
-    final List<Widget> yearWidgets = degree.years.cast<DegreeYear>().map((
-      year,
-    ) {
-      final modules = year.modules.cast<MarkItem>();
-      final modulesGrid = modules.isEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'No modules for year ${year.yearIndex}.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: modules.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: _getCrossAxisCount(
-                    MediaQuery.of(context).size.width,
-                  ),
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 20,
-                ),
-                itemBuilder: (ctx, idx) {
-                  final m = modules.elementAt(idx);
-                  return ModuleWidget(id: m.key as int);
-                },
-              ),
-            );
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StatisticsCarousel(
-            height: 150,
-            items: [
-              StatisticItem(
-                heading: 'Year ${year.yearIndex} average',
-                value: repo.averageForYear(year.key as int),
-                isPercentage: true,
-              ),
-              StatisticItem(
-                heading: 'Weighted average',
-                value: repo.weightedAverageForYear(year.key as int),
-                isPercentage: true,
-              ),
-              StatisticItem(
-                heading: 'Credits',
-                value: repo.creditsForYear(year.key as int),
-              ),
-            ],
-          ),
-          modulesGrid,
-        ],
-      );
-    }).toList();
+    final List<Widget> yearWidgets = degree.years
+        .cast<DegreeYear>()
+        .map((year) => DegreeYearWidget(degreeId: degreeId, year: year))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(degree.name, style: Theme.of(context).textTheme.bodyMedium),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add Year',
+            onPressed: () => repo.addYear(degreeId),
+          ),
+          PopupMenuButton<int>(
+            onSelected: (value) {
+              if (value == 0) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => DegreeCreationDialog(
+                    title: 'Rename Degree',
+                    confirmText: 'Save',
+                    initialName: degree.name,
+                    onSubmit: (name) => repo.renameDegree(degreeId, name),
+                  ),
+                );
+              } else if (value == 1) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text('Are you sure?',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    content: Text(
+                      'Remove ${degree.name} with all its years?',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        child: Text('No',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          repo.removeDegree(degreeId);
+                          Navigator.of(ctx)
+                              ..pop()
+                              ..pop();
+                        },
+                        child: Text('Yes',
+                            style: Theme.of(context).textTheme.bodyMedium),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            itemBuilder: (ctx) => [
+              PopupMenuItem(
+                value: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Rename',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    const Icon(Icons.edit),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Remove',
+                        style: Theme.of(context).textTheme.bodyMedium),
+                    Icon(Icons.delete,
+                        color: Theme.of(context).colorScheme.error),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView(
         children: [
