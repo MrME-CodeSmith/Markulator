@@ -8,9 +8,22 @@ import './padded_list_heading_widget.dart';
 import './percentage_input_widget.dart';
 
 class ModuleCreationUserInputWidget extends StatefulWidget {
-  const ModuleCreationUserInputWidget({super.key, required this.toEdit});
+  const ModuleCreationUserInputWidget({
+    super.key,
+    required this.toEdit,
+    this.onAdd,
+  });
 
   final MarkItem? toEdit;
+
+  /// Optional callback invoked when creating a new module.
+  ///
+  /// If null, [ModuleRepository.addModule] is used by default.
+  final void Function({
+    required String name,
+    required double mark,
+    required double credits,
+  })? onAdd;
 
   @override
   State<ModuleCreationUserInputWidget> createState() =>
@@ -145,19 +158,26 @@ class _ModuleCreationUserInputWidgetState
                   ),
                 ),
                 onPressed: () {
+                  final double mark =
+                      double.tryParse(_percentageController.text) ?? 0.0;
+                  final parsedCredits =
+                      double.tryParse(_creditsController.text);
+                  final double credits = parsedCredits ?? 0.0;
                   if (widget.toEdit == null) {
-                    moduleProvider.addModule(
-                      name: _nameController.text,
-                      mark:
-                          (double.tryParse(_percentageController.text) != null)
-                          ? double.parse(_percentageController.text)
-                          : 0,
-                      contributors: null,
-                      credits:
-                          (double.tryParse(_creditsController.text) != null)
-                          ? double.parse(_creditsController.text)
-                          : 0,
-                    );
+                    if (widget.onAdd != null) {
+                      widget.onAdd!(
+                        name: _nameController.text,
+                        mark: mark,
+                        credits: credits,
+                      );
+                    } else {
+                      moduleProvider.addModule(
+                        name: _nameController.text,
+                        mark: mark,
+                        contributors: null,
+                        credits: credits,
+                      );
+                    }
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -170,14 +190,9 @@ class _ModuleCreationUserInputWidgetState
                     moduleProvider.updateModule(
                       id: widget.toEdit!.key,
                       name: _nameController.text,
-                      mark:
-                          (double.tryParse(_percentageController.text) != null)
-                          ? double.parse(_percentageController.text)
-                          : 0,
+                      mark: mark,
                       credits:
-                          (double.tryParse(_creditsController.text) != null)
-                          ? double.parse(_creditsController.text)
-                          : widget.toEdit!.credits,
+                          parsedCredits != null ? credits : widget.toEdit!.credits,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/repositories/degree_repository.dart';
@@ -6,6 +7,7 @@ import '../../models/degree_year_model.dart';
 import '../../models/module_model.dart';
 import 'module_widget.dart';
 import 'statistics_carousel_widget.dart';
+import 'module_creation_user_input.dart';
 
 class DegreeYearWidget extends StatelessWidget {
   final int degreeId;
@@ -20,6 +22,39 @@ class DegreeYearWidget extends StatelessWidget {
   int _getCrossAxisCount(double width) {
     final count = (width / 160).floor();
     return count > 0 ? count : 1;
+  }
+
+  void _openAddModule(BuildContext context) {
+    final repo = context.read<DegreeRepository>();
+    final sheet = ModuleCreationUserInputWidget(
+      toEdit: null,
+      onAdd: ({required String name, required double mark, required double credits}) {
+        repo.addModule(
+          degreeId,
+          year.key as int,
+          name: name,
+          mark: mark,
+          credits: credits,
+          contributors: null,
+        );
+      },
+    );
+
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (ctx) => Material(child: sheet),
+      );
+    } else {
+      showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
+        ),
+        builder: (ctx) => sheet,
+      );
+    }
   }
 
   @override
@@ -67,11 +102,20 @@ class DegreeYearWidget extends StatelessWidget {
                 'Year ${year.yearIndex}',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: 'Remove Year',
-                onPressed: () =>
-                    repo.removeYear(degreeId, year.key as int),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    tooltip: 'Add Module',
+                    onPressed: () => _openAddModule(context),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Remove Year',
+                    onPressed: () =>
+                        repo.removeYear(degreeId, year.key as int),
+                  ),
+                ],
               ),
             ],
           ),
