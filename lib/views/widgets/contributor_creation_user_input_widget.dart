@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:markulator/models/boolean_wrapper_model.dart';
 import 'package:markulator/models/module_model.dart';
 import 'package:markulator/views/widgets/weight_percentage_input.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +32,7 @@ class _ContributorCreationUserInputWidgetState
   late final TextEditingController _nameController;
   late final TextEditingController _wightController;
   late final TextEditingController _percentageController;
-  late final Boolean checked;
+  late bool _checked;
 
   late ModuleRepository moduleProvider;
   late SystemInformationService systemInformationProvider;
@@ -58,9 +57,7 @@ class _ContributorCreationUserInputWidgetState
           : "",
     );
 
-    checked = Boolean(
-      value: (widget.toEdit != null) ? widget.toEdit!.autoWeight : false,
-    );
+    _checked = (widget.toEdit != null) ? widget.toEdit!.autoWeight : false;
   }
 
   @override
@@ -122,7 +119,12 @@ class _ContributorCreationUserInputWidgetState
               padding: const EdgeInsets.only(bottom: 5),
               child: WeightPercentageInputWidget(
                 percentageController: _wightController,
-                val: checked,
+                value: _checked,
+                onChanged: (val) {
+                  setState(() {
+                    _checked = val;
+                  });
+                },
               ),
             ),
             if (widget.toEdit == null ||
@@ -165,7 +167,7 @@ class _ContributorCreationUserInputWidgetState
                         contributorName: _nameController.text,
                         weight:
                             (double.tryParse(_wightController.text) != null &&
-                                !checked.wrappedValue)
+                                !_checked)
                             ? double.parse(_wightController.text)
                             : 0,
                         mark:
@@ -173,7 +175,7 @@ class _ContributorCreationUserInputWidgetState
                                 null)
                             ? double.parse(_percentageController.text)
                             : 0,
-                        autoWeight: checked.wrappedValue,
+                        autoWeight: _checked,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -189,7 +191,7 @@ class _ContributorCreationUserInputWidgetState
                         contributorName: _nameController.text,
                         weight:
                             (double.tryParse(_wightController.text) != null &&
-                                !checked.value)
+                                !_checked)
                             ? double.parse(_wightController.text)
                             : 0,
                         mark:
@@ -197,7 +199,7 @@ class _ContributorCreationUserInputWidgetState
                                 null)
                             ? double.parse(_percentageController.text)
                             : 0,
-                        autoWeight: checked.wrappedValue,
+                        autoWeight: _checked,
                         parent: widget.toEdit!.parent!,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
