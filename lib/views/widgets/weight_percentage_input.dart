@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:markulator/models/boolean_wrapper_model.dart';
 
 import './percentage_input_widget.dart';
 
@@ -7,11 +6,13 @@ class WeightPercentageInputWidget extends StatefulWidget {
   const WeightPercentageInputWidget({
     super.key,
     required this.percentageController,
-    required this.val,
+    required this.value,
+    required this.onChanged,
   });
 
-  final Boolean val;
+  final bool value;
   final TextEditingController percentageController;
+  final ValueChanged<bool> onChanged;
 
   @override
   State<WeightPercentageInputWidget> createState() =>
@@ -20,6 +21,14 @@ class WeightPercentageInputWidget extends StatefulWidget {
 
 class _WeightPercentageInputWidgetState
     extends State<WeightPercentageInputWidget> {
+  late bool _checked;
+
+  @override
+  void initState() {
+    super.initState();
+    _checked = widget.value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -30,17 +39,18 @@ class _WeightPercentageInputWidgetState
               width: constraints.maxWidth * 0.4,
               child: PercentageInputWidget(
                 label: "Weight",
-                readOnly: widget.val.wrappedValue,
+                readOnly: _checked,
                 percentageController: widget.percentageController,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 21),
               child: Checkbox(
-                value: widget.val.wrappedValue,
+                value: _checked,
                 onChanged: (_) {
                   setState(() {
-                    widget.val.value = !widget.val.wrappedValue;
+                    _checked = !_checked;
+                    widget.onChanged(_checked);
                   });
                 },
               ),
